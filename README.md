@@ -2,7 +2,7 @@
 
 RPAT evaluates the **performance of a launch vehicle**.
 
-It determines the **maximum payload capacity** for a given rocket across target trajectories (LEO, GTO, TLI, etc.) based on a user-defined ∆v cutoff. RPAT also graphs the relationship between **payload mass and delta-v**, giving visual feedback on performance trends.
+It determines the **maximum payload capacity** for a given rocket across target trajectories (LEO, GTO, TLI, etc.) based on a user-defined ∆v cutoff. RPAT also graphs the relationship between **payload mass and delta-v**, giving visual feedback on performance trends, while trying to give you rough idea of how efficiently your rocket is performing based on a series of metrics outlined below.
 
 ## Payload Efficiency Metrics
 
@@ -52,15 +52,13 @@ This score is fully normalised and dimensionless, allowing for fair comparisons 
    * **NPEQ** = Initial ∆v ÷ ∆v loss rate
    * **MIPEQ** = `-log₁₀( (|d(∆v)/dm| / ∆v₀) / (WetMass × PayloadFraction³) )`
 
-## Metric Comparison Table
-
 | Metric  | Definition               | Insight Gained                             |
 | ------- | ------------------------ | ------------------------------------------ |
 | `PEQ`   | Max Payload / ∥d(∆v)/dm∥ | Payload per unit ∆v lost                   |
 | `NPEQ`  | ∆v₀ / ∥d(∆v)/dm∥         | Payload margin scaled by energy            |
 | `MIPEQ` | `-log₁₀( ε / (M × f³) )` | Fully normalised energy–mass–payload score |
 
-## Example Table
+## Example Values from LVs:
 
 | Launch Vehicle       | PEQ     | NPEQ   | MIPEQ |
 | -------------------- | ------- | ------ | ----- |
@@ -68,6 +66,18 @@ This score is fully normalised and dimensionless, allowing for fair comparisons 
 | Electron (Rocketlab) | 23      | 965    | 2.110 |
 | Saturn V             | 478,832 | 72,817 | 7.181 |
 | Titan II (ICBM)      | 2,782   | 9,680  | 4.147 |
+
+
+
+## Installation
+
+To install required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+To run, simply click one of the .py examples in /Example Scripts or configure RPAT.py with rocket paramaters and run that file. The rest is done automatically.
 
 ## Mathematical Methodology
 
@@ -94,7 +104,7 @@ RPAT derives its performance metrics using a simple yet effective numerical diff
 
    The first derivative at zero payload is taken as the initial slope.
 
-4. **From Slope to Quotients**
+4. **Quotients**
    This initial slope value, along with total ∆v and maximum payload, feeds into the three core metrics:
 
    * **PEQ** = Max payload / |d(∆v)/dm| at payload = 0
@@ -105,6 +115,6 @@ This approach allows RPAT to characterise performance without symbolic calculus 
 
 ## Current Limitations
 
-* **No user input yet** — values are hardcoded; input functionality is planned.
-* **No booster support** — SRBs and strap-on boosters will be implemented later.
-* **No crossfeed/asparagus staging** — unlikely to be supported, but partial modelling via boosters may be possible.
+* **No user input yet** as values are hardcoded; input functionality is planned.
+* **No booster support** but SRBs and strap-on boosters will be implemented later.
+* **No crossfeed/asparagus staging** this is unlikely to be supported, but partial modelling via boosters may be possible.
