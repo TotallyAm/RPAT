@@ -1,0 +1,54 @@
+Saturn V:
+S1:
+Dry mass = 137000
+Wet mass = 2214000
+S2:
+Dry = 43000
+Wet = 470000
+S3:
+Dry = 15200
+Wet = 120500
+
+Adjusted for RPAT:
+S1:
+Dry mass = 730000
+Wet mass = 2899000
+304(s) vacuum
+S2:
+Dry mass = 155600
+Wet mass = 599000
+424(s) vacuum
+S3:
+Dry = 15200
+Wet = 120500
+
+Rocket Lab Electron:
+S1:
+Dry = 3250
+Wet = 12550
+311(s) vacuum
+S2:
+dry = 250
+wet = 2300
+333(s) vacuum
+
+Falcon 9 (expended):
+S1:
+Dry = 133500
+Wet = 431000
+311(s) avg
+S2:
+Dry = 4000
+Wet = 111500
+348s (vac)
+
+Titan II ICBM:
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 4,319
+Wet = 121,200
+273s (avg)
+S2:
+Dry = 2301
+Wet = 28400
+316s (vac)
