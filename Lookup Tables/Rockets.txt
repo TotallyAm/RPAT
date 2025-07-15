@@ -1,7 +1,17 @@
+## NOTES ##
+
+Sometimes ISP for the first stage is taken as a vacuum value, this is somewhat unrealistic, it is often best to
+take an average of ASL and Vac ISP values, whether this was done is indicated
+
+
+## ROCKETS ##
+
+
 Saturn V:
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS*
 S1:
-Dry mass = 137000
-Wet mass = 2214000
+Dry = 137000
+Wet = 2214000
 S2:
 Dry = 43000
 Wet = 470000
@@ -9,33 +19,36 @@ S3:
 Dry = 15200
 Wet = 120500
 
-Adjusted for RPAT:
+Manually adding stage mass for S-V:
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
 S1:
-Dry mass = 730000
-Wet mass = 2899000
+Dry = 730000
+Wet = 2899000
 304(s) vacuum
 S2:
-Dry mass = 155600
-Wet mass = 599000
+Dry = 155600
+Wet = 599000
 424(s) vacuum
 S3:
 Dry = 15200
 Wet = 120500
 
 Rocket Lab Electron:
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
 S1:
 Dry = 3250
 Wet = 12550
 311(s) vacuum
 S2:
-dry = 250
-wet = 2300
+Dry = 250
+Wet = 2300
 333(s) vacuum
 
 Falcon 9 (expended):
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
 S1:
 Dry = 133500
-Wet = 431000
+Wet = 520500
 311(s) avg
 S2:
 Dry = 4000

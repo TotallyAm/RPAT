@@ -1,0 +1,8 @@
+{"falcon9": {
+  "manStage": 0,
+  "stages" : 2,
+  "dryMass": [22000, 4000],
+  "wetMass": [409000, 111500],
+  "isp"    : [311, 348]
+  
+}}

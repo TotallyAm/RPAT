@@ -115,6 +115,6 @@ This approach allows RPAT to characterise performance without symbolic calculus 
 
 ## Current Limitations
 
-* **No user input yet** as values are hardcoded; input functionality is planned.
+* **Limited presets** - only one rocket is available in the preset, other rockets are available in the precoded /Example Scripts
 * **No booster support** but SRBs and strap-on boosters will be implemented later.
 * **No crossfeed/asparagus staging** this is unlikely to be supported, but partial modelling via boosters may be possible.

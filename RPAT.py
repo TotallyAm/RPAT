@@ -3,12 +3,16 @@
 ########## Created by TotallyAm ##############
 ##############################################
 
+
+## version 0.5
+
 import matplotlib.pyplot as plt
 import numpy as np
+from scripts.user_input import getParam
 
 GRAPH = True #whether to run the matplotlib grpahing and subquent experimental analysis - default on
 DEBUG_MODE = False #whether to include debugging messages in the log - default off
-MAN_STAGE_ADDITION = False #if the mass of subsequent stages has been added to the mass of each stage
+MAN_STAGE_ADDITION = False #if the mass of subsequent stages has been added to the mass of each stage, do not change
 
 print("----------------------------------------")
 print("Rocket Performance Analysis Tool (RPAT)")
@@ -27,14 +31,17 @@ trajectory_targets = {
 coarseFactor = 0.01 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
 fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 30 at least)
 
-def stageParam(): #hardcoded empty
-  stages = 0
-  dryMass     = [] #kg
-  wetMass     = [] #kg
-  isp         = [] #specific impulse by weight (seconds)
-  return stages, dryMass, wetMass, isp
+#stage param removed from V5 replaced with user friendly alternative
+result = getParam()
+if result:
+  stages, dryMass, wetMass, isp, manStage = result
+  MAN_STAGE_ADDITION = manStage
+  if DEBUG_MODE:
+   print(f" Manual Stage Addition: {MAN_STAGE_ADDITION}")
+else:
+  print("Error, please try again")
 
-stages, dryMass, wetMass, isp = stageParam()
+
 
 if MAN_STAGE_ADDITION:
   rocketMass = max(wetMass)
@@ -59,7 +66,7 @@ def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
     m1 = dryMass[i] + upperMass
     dv = rocketEquation(m1, m0, isp[i])
     totalDv += dv
-    if not MAN_STAGE_ADDITION:
+    if MAN_STAGE_ADDITION == False:
       upperMass = m0
     
   return totalDv
@@ -158,7 +165,7 @@ for name, res in results.items():
 if GRAPH:
   print("Graphing rocket performance......")
   
-  cutoff     = 400 #m/s
+  cutoff     = 8000 #m/s
   step       = wetMass[-1] * 0.01 #kg
   maxPayload = wetMass[-1] * 1 #kg
 
