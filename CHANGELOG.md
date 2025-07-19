@@ -1,6 +1,6 @@
-\## V0.6 - Expansionism
+## V0.6 - Expansionism
 
-\### Added:
+### Added:
 
 * Improvements to the manual and preset input system in the terminal.
 * Massive expansion of the rockets library.
@@ -10,7 +10,7 @@
 
 
 
-\### Changed:
+### Changed:
 
 * Completely removed /Example Scripts as the purpose of it is now defunct.
 * Completely removed PEQ/NPEQ metrics, as they have been made redundant.
@@ -22,7 +22,7 @@
 
 
 
-\### Notes:
+### Notes:
 
 rockets.json is subject to being reworked in the future, any custom additions of it will need porting to the new system, thus it is highly
 
@@ -32,9 +32,9 @@ recommended you utilise the rockets.txt lookup table to store the relevant infor
 
 
 
-\## V0.5 - A New Input
+## V0.5 - A New Input
 
-\### Added
+### Added
 
 * Terminal based input system created
 * Support for manual input for booster-less rockets
@@ -43,18 +43,13 @@ recommended you utilise the rockets.txt lookup table to store the relevant infor
 
 
 
-\### Notes:
+### Notes:
 Subsequent updates will NOT include /Example Scripts, this was a placeholder for the json presets before it existed, therefore it will be made redundant with the expansion of rockets.json.
 
 
 
 
-
-
-
-
-
-\## V0.4
+## V0.4
 
 Initial GitHub Release
 

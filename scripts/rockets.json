@@ -100,13 +100,4 @@
     "desc"    : "Tenko-Kiko 5A (JAXA RP-1)"
    },
    
-   "tk-5b2"   : {
-    "manStage": 1,
-    "stages"  : 2,
-    "dryMass" : [155934, 12502],
-    "wetMass" : [697330, 135656],
-    "isp"     : [330, 370],
-    "type"    : "Fictional",
-    "desc"    : "Tenko-Kiko 5A (Modified) (JAXA RP-1)"
-   }
 }
