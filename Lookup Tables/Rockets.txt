@@ -1,7 +1,19 @@
+## NOTES ##
+
+Sometimes ISP for the first stage is taken as a vacuum value, this is somewhat unrealistic, it is often best to
+take an average of ASL and Vac ISP values, whether this or ASL was used is indicated
+
+
+## ROCKETS ##
+
+
+##HISTORICAL
+
 Saturn V:
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS*
 S1:
-Dry mass = 137000
-Wet mass = 2214000
+Dry = 137000
+Wet = 2214000
 S2:
 Dry = 43000
 Wet = 470000
@@ -9,38 +21,19 @@ S3:
 Dry = 15200
 Wet = 120500
 
-Adjusted for RPAT:
+Manually adding stage mass for S-V:
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
 S1:
-Dry mass = 730000
-Wet mass = 2899000
+Dry = 730000
+Wet = 2899000
 304(s) vacuum
 S2:
-Dry mass = 155600
-Wet mass = 599000
+Dry = 155600
+Wet = 599000
 424(s) vacuum
 S3:
 Dry = 15200
 Wet = 120500
-
-Rocket Lab Electron:
-S1:
-Dry = 3250
-Wet = 12550
-311(s) vacuum
-S2:
-dry = 250
-wet = 2300
-333(s) vacuum
-
-Falcon 9 (expended):
-S1:
-Dry = 133500
-Wet = 431000
-311(s) avg
-S2:
-Dry = 4000
-Wet = 111500
-348s (vac)
 
 Titan II ICBM:
 **UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS**
@@ -52,3 +45,145 @@ S2:
 Dry = 2301
 Wet = 28400
 316s (vac)
+
+N1 (1969 ver):
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS**
+SOURCE: (http://www.astronautix.com/n/n11969.html)
+
+S1:
+Dry = 130000 
+Wet = 1880000
+284s (ASL)
+S2:
+Dry = 55700
+Wet = 560700
+346s (vac)
+S3:
+Dry = 13700
+Wet = 188700
+353s (vac)
+S4:
+Dry = 6000
+Wet = 61800
+353s (vac)
+S5:
+Dry = 3500
+Wet = 18200
+349s (vac)
+
+
+Delta IV Medium
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS**
+SOURCE: (http://www.astronautix.com/d/delta4m.html)
+
+S1:
+Dry = 26760
+Wet = 226400
+365s (ASL)
+S2:
+Dry = 2850
+Wet = 24170
+462s (vac)
+
+Delta IV Medium + Star 48B
+**UPPER STAGES NOT INCLUDED IN LOWER STAGE MASS**
+SOURCE: (http://www.astronautix.com/d/delta4m.html) (http://www.astronautix.com/s/star48b.html)
+
+S1:
+Dry = 26760
+Wet = 226400
+365s (ASL)
+S2:
+Dry = 2850
+Wet = 24170
+462s (vac)
+S3 (Star 48B):
+Dry = 126
+Wet = 2137
+286s (vac)
+
+-semi hypothetical, Star 48B was never used on Delta IV Medium, but was used on Delta IV Heavy for Parker Solar Probe
+-possible, just never done
+
+##Active
+
+Rocket Lab Electron:
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 3250
+Wet = 12550
+311(s) vacuum
+S2:
+Dry = 250
+Wet = 2300
+333(s) vacuum
+
+Falcon 9 (Block 5) (expended):
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 133500
+Wet = 520500
+311(s) avg
+S2:
+Dry = 4000
+Wet = 111500
+348s (vac)
+
+##Fictional
+
+Dolphin (Tranche 2) [RP-1]
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 207656
+Wet = 700677
+287.5s (avg)
+S2:
+Dry = 11010
+Wet = 186089
+380s (vac)
+-fairings included in S2
+-interstage removed in S2, included in S1
+
+Dolphin (Trance 2) EX (Three stage ver.)
+-third stage is hydrolox, should increase energy efficiency and therefore quotient score.
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 226919
+Wet = 719941
+287.5s (avg)
+S2:
+Dry = 30369
+Wet = 205449
+380s (vac)
+S3:
+Dry = 2742
+Wet = 19369
+467s (vac)
+-interstage removed in S2, included in S1
+-fairings removed in S3, included in S1 & S2
+
+Tenko-Kiko 5B
+**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
+S1:
+Dry = 155934
+Wet = 697330
+297s (avg)
+S2:
+Dry = 12502
+Wet = 135656 
+366s (vac)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

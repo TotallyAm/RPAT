@@ -3,12 +3,16 @@
 ########## Created by TotallyAm ##############
 ##############################################
 
+
+## version 0.5
+
 import matplotlib.pyplot as plt
 import numpy as np
+from scripts.user_input import getParam
 
 GRAPH = True #whether to run the matplotlib grpahing and subquent experimental analysis - default on
 DEBUG_MODE = False #whether to include debugging messages in the log - default off
-MAN_STAGE_ADDITION = False #if the mass of subsequent stages has been added to the mass of each stage
+MAN_STAGE_ADDITION = False #if the mass of subsequent stages has been added to the mass of each stage, do not change
 
 print("----------------------------------------")
 print("Rocket Performance Analysis Tool (RPAT)")
@@ -16,10 +20,14 @@ print("         Created by TotallyAm")
 print("----------------------------------------")
 
 trajectory_targets = {
+    "IRBM (Sub-orbital, est)     ": 6000,
+    "ICBM, (Sub-orbital, est)    ": 7200,
     "LEO (Low Earth Orbit)       ": 9300,
+    "LEO (Upper bound)           ": 9600,
     "GTO (Geostationary Transfer)": 11800,
     "TLI (Trans-Lunar Injection) ": 12600,
-    "Mars Transfer               ": 12900
+    "Mars Transfer               ": 12900,
+    "Jupiter Transfer            ": 15600
 }
 
 ## step factors (more = slower, more accurate)
@@ -27,14 +35,19 @@ trajectory_targets = {
 coarseFactor = 0.01 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
 fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 30 at least)
 
-def stageParam(): #hardcoded empty
-  stages = 0
-  dryMass     = [] #kg
-  wetMass     = [] #kg
-  isp         = [] #specific impulse by weight (seconds)
-  return stages, dryMass, wetMass, isp
+#stage param removed from V5 replaced with user friendly alternative
+result = getParam()
+if result:
+  stages, dryMass, wetMass, isp, manStage, rocketName = result
+  MAN_STAGE_ADDITION = manStage
+  if DEBUG_MODE:
+   print(f" Manual Stage Addition: {MAN_STAGE_ADDITION}")
+else:
+  print("Error, please try again")
 
-stages, dryMass, wetMass, isp = stageParam()
+print(f"Evaluating {rocketName}.....")
+
+
 
 if MAN_STAGE_ADDITION:
   rocketMass = max(wetMass)
@@ -59,7 +72,7 @@ def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
     m1 = dryMass[i] + upperMass
     dv = rocketEquation(m1, m0, isp[i])
     totalDv += dv
-    if not MAN_STAGE_ADDITION:
+    if MAN_STAGE_ADDITION == False:
       upperMass = m0
     
   return totalDv
@@ -105,7 +118,7 @@ for name, tgtDv in trajectory_targets.items():
   #coarse pass
   coarse = payloadFinder(
     lowBound=0,
-    highBound=(2 * wetMass[-1]),
+    highBound=(10 * wetMass[-1]),
     stepSize=coarseStep,
     targetDv=tgtDv,
     dryMass=dryMass,
@@ -158,15 +171,17 @@ for name, res in results.items():
 if GRAPH:
   print("Graphing rocket performance......")
   
-  cutoff     = 400 #m/s
-  step       = wetMass[-1] * 0.01 #kg
-  maxPayload = wetMass[-1] * 1 #kg
+  cutoff        = 9200 #m/s #final cut off of the graph, leave this alone as it impacts the integral
+  step          = wetMass[-1] * 0.002 #kg
+  maxPayload    = rocketMass * 0.1 #kg
 
   payloads   = [] #x axis
   dvs        = [] #y axis
   p          = 0.0
   iterations = 0
 
+  
+  
   while p <= maxPayload:
     dv = calculateTotalDv(dryMass, wetMass, isp, p, stages)
     payloads.append(p)
@@ -177,31 +192,12 @@ if GRAPH:
     iterations += 1
   
   
-  #plotting
-  plt.figure(figsize=(8,5))
-  plt.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
-  plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
-  plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
-  plt.xlabel("Payload mass (kg)")
-  plt.ylabel("Total Δv (m/s)")
-  plt.title("Rocket Performance: Payload vs. Δv")
-  plt.legend(loc='best')
-  plt.grid(True)
-  plt.tight_layout()
-  print(f"Graphing completed with {iterations} iterations.")
-  plt.show()
-
-    ########################### Payload Efficiency Analysis ###############################
-    # This section estimates the payload efficiency of the launch vehicle by:
-    # - Calculating the derivative of Δv with respect to payload mass (d(Δv)/dm)
-    # - Normalising the result to produce dimensionless quotients:
-    #     - PEQ  = Payload capacity divided by initial Δv sensitivity
-    #     - NPEQ = Normalised version using Δv₀
-    # This is an experimental feature for theoretical insight and cross-vehicle comparison.
-    #######################################################################################
 
 
+  #numerical calculus calculations for the metrics:
+   
   #Energy cost per payload unit = f'(0) = d(Δv)/d(payload mass)
+  #finite difference differential approximation
   dvDerivative = []
   for i in range(1, len(dvs)):
     delta2v = dvs[i] - dvs[i-1]
@@ -211,36 +207,56 @@ if GRAPH:
     dvDerivative.append(slope)
   initialSlope = dvDerivative[0] #m/s/kg
   normalisedEq = -initialSlope / dvs[0] #%
-  #PEQ = Payload(dv > 9200)/(d(Δv)/d(payload mass(m=0))
-  #NPEQ = 1/((d(Δv)/d(payload mass(m=0))/Δv0)
+  #leq = -log10(((d(Δv)/d(payload =0)) / dv(payload = 0)) / (rocket mass * (payload at leo / rocket mass))
 
   #d(∆v)/dm = raw payload sensitivity
-  #peq = dV resillience vs lifting capacity
-  #npeq = dV loss rate scaled to energy
-  #mipeq = npeq/2
+
+  payloadFraction = leoPayload / (rocketMass)
+  LEQ = -np.log10((normalisedEq) / (rocketMass * (payloadFraction **(3))))
+
+  #trapezoidal rule numerical integration
+  area = 0
+  for i in range(len(payloads) - 1):
+    h = payloads[i+1] - payloads[i]
+    area += 0.5 * (dvs[i] + dvs[i+1]) * h
+  
+  if DEBUG_MODE:
+    print(f"Integral: {area:,.3f}")
+
+  HEQ = (area/(rocketMass * 100))
 
 
-
-  dv0 = dvs[0]
-  peq  = leoPayload / np.abs(initialSlope)
-  npeq = dv0 / np.abs(initialSlope)
-  payloadFraction = leoPayload / rocketMass
-  print((normalisedEq * payloadFraction), normalisedEq, payloadFraction)
-  mipeq = -np.log10((normalisedEq) / (rocketMass * (payloadFraction **(3))))
-
-  print(f"\nInitial ∆v drop per kg: {initialSlope:.2f} m/s/kg")
-  print(f"Normalized            : {normalisedEq*100:.4f} % ∆v lost per kg payload (at zero payload)")
-  print(f"\nPayload Efficiency Quotient (PEQ)             : {peq:,.0f}")
-  print(f"Normalised Payload Efficiency Quotient (NPEQ) : {npeq:,.0f}")
-  print(f"Mass independent PEQ (MIPEQ)                  : {mipeq:.3f}")
-  print(f"\nPayload Fraction                              : {payloadFraction:.3f} %")
-
-
+  #print quotients
+  
+  print(f"\nInitial ∆v drop per kg    : {initialSlope:.2f} m/s/kg")
+  print(f"\nLEQ (Low-Energy Quotient) : {LEQ:.3f}")
+  print(f"HEQ (High-Energy Quotient): {HEQ:.3f}")
+  print(f"\nPayload Fraction          : {(payloadFraction) * 100:.3f} %")
+  
+  
+  #plot for dv = f(payload)
+  
+  plt.figure(figsize=(8,5))
+  plt.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
+  plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
+  plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
+  plt.xlabel("Payload mass (kg)")
+  plt.ylabel("Total Δv (m/s)")
+  plt.title(f"Rocket Performance: Payload vs. Δv, {rocketName}")
+  plt.legend(loc='best')
+  plt.grid(True)
+  plt.tight_layout()
+  print(f"Graphing completed with {iterations} iterations.")
+  plt.show()
+  
+  
+  #plot for d(dv) = f'(payload)
+   
   plt.figure(figsize=(8,5))
   plt.plot(payloads[1:], dvDerivative, '-', lw=2, color='orange', label="d(Δv)/d(payload)")
   plt.xlabel("Payload mass (kg)")
   plt.ylabel("Marginal ∆v loss (m/s per kg payload)")
-  plt.title("Δv Sensitivity to Payload")
+  plt.title(f"Δv Sensitivity to Payload, {rocketName}")
   plt.axhline(0, color='gray', linestyle='--')
   plt.grid(True)
   plt.legend()

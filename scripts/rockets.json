@@ -1,0 +1,112 @@
+{"falcon9": {
+  "manStage": 0,
+  "stages"  : 2,
+  "dryMass" : [22000, 4000],
+  "wetMass" : [409000, 111500],
+  "isp"     : [311, 348],
+  "type"    : "Active",
+  "desc"    : "Falcon 9 Block 5 (Expended) (SpaceX)"
+  
+  },
+
+  "electron": {
+    "manStage": 1,
+    "stages"  : 2,
+    "dryMass" : [3250, 250],
+    "wetMass" : [12550, 2300],
+    "isp"     : [311, 333],
+    "type"    : "Active",
+    "desc"    : "Electron (Rocket Lab)"
+  },
+  
+ "saturnv": {
+  "manStage": 0,
+  "stages": 3,
+  "dryMass": [137000, 43000, 15200],
+  "wetMass": [2214000, 470000, 120500],
+  "isp"    : [304, 424, 424],
+  "type"   : "Historical",
+  "desc"   : "Saturn V (NASA, various)"
+  },
+
+  "titan2": {
+    "manStage": 0,
+    "stages"  : 2,
+    "dryMass" : [4319, 2301],
+    "wetMass" : [121200, 28400],
+    "isp"     : [273, 316],
+    "type"    : "Historical",
+    "desc"    : "Titan II (ICBM)"
+  },
+
+  "n1-1969": {
+    "manStage": 0,
+    "stages"  : 5,
+    "dryMass" : [130000, 55700, 13700, 6000, 3500],
+    "wetMass" : [1880000, 560700, 188700, 61800, 18200],
+    "isp"     : [284, 346, 353, 353, 349],
+    "type"    : "Historical",
+    "desc"    : "N1 (1969 version) (CCCP, OKB-1)"
+  },
+
+  "delta-4m": {
+    "manStage": 0,
+    "stages"  : 2,
+    "dryMass" : [26760, 2850],
+    "wetMass" : [226400, 24170],
+    "isp"     : [365, 462],
+    "type"    : "Historical",
+    "desc"    : "Delta IV Medium (ULA)"
+  },
+
+  "delta-4m-star48b": {
+    "manStage": 0,
+    "stages"  : 3,
+    "dryMass" : [26760, 2850, 126],
+    "wetMass" : [226400, 24170, 2137],
+    "isp"     : [365, 462, 286],
+    "type"    : "Hypothetical",
+    "desc"    : "Delta IV Medium + Star 48B kick stage (ULA)"
+  },
+
+  "dolphin2": {
+    "manStage": 1,
+    "stages"  : 2,
+    "dryMass" : [207656, 11010],
+    "wetMass" : [700677, 186089],
+    "isp"     : [287.5, 380],
+    "type"    : "Fictional",
+    "desc"    : "Dolphin Tranche 2, (Saxon Orbital RP-1)"
+  },
+   
+  "dolphin3": {
+    "manStage": 1,
+    "stages"  : 3,
+    "dryMass" : [226919, 30369, 2742],
+    "wetMass" : [719941, 205449, 19369],
+    "isp"     : [287.5, 380, 467],
+    "type"    : "Fictional",
+    "desc"    : "Dolphin Tranche 2, EX kick stage. (Saxon Orbital RP-1) "
+ 
+  },   
+   
+  "tk-5b"   : {
+    "manStage": 1,
+    "stages"  : 2,
+    "dryMass" : [155934, 12502],
+    "wetMass" : [697330, 135656],
+    "isp"     : [297, 366],
+    "type"    : "Fictional",
+    "desc"    : "Tenko-Kiko 5A (JAXA RP-1)"
+   },
+   
+   "tk-5b2"   : {
+    "manStage": 1,
+    "stages"  : 2,
+    "dryMass" : [155934, 12502],
+    "wetMass" : [697330, 135656],
+    "isp"     : [330, 370],
+    "type"    : "Fictional",
+    "desc"    : "Tenko-Kiko 5A (Modified) (JAXA RP-1)"
+   }
+}

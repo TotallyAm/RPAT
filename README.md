@@ -1,120 +1,171 @@
-# RPAT — Rocket Performance Analysis Tool
+# RPAT – Rocket Performance Analysis Tool
 
-RPAT evaluates the **performance of a launch vehicle**.
+RPAT is a terminal-based tool for analysing the performance of launch vehicles. It's designed for players of KSP (particularly RP-1), amateur aerospace designers, and anyone who wants a quick, clear look at how well a given rocket performs.
 
-It determines the **maximum payload capacity** for a given rocket across target trajectories (LEO, GTO, TLI, etc.) based on a user-defined ∆v cutoff. RPAT also graphs the relationship between **payload mass and delta-v**, giving visual feedback on performance trends, while trying to give you rough idea of how efficiently your rocket is performing based on a series of metrics outlined below.
+This tool isn't meant to replace detailed simulation or flight testing. Instead, it provides instant feedback on vehicle efficiency, stage contribution, and whether your design actually suits your intended mission – whether that's a basic LEO launch or a deep-space payload delivery.
 
-## Payload Efficiency Metrics
+---
 
-RPAT introduces three key performance quotients that evaluate a launch vehicle's ability to carry payload while minimising delta-v loss:
+## Purpose and Design Philosophy
 
-* **PEQ** quantifies payload capacity relative to early ∆v sensitivity.
-* **NPEQ** normalises this against total delta-v.
-* **MIPEQ** adds mass and payload scaling for cross-vehicle comparison.
+RPAT was created to answer a simple question:
 
-These values are derived automatically from the payload vs ∆v curve and require no manual tuning.
+> "Is this rocket good at what I built it for?"
 
-## Visual Derivative Graph
+The goals were:
 
-A graph of **∆v loss per kg of payload** helps visualise how performance degrades with increasing payload. This makes it easy to spot whether a rocket is margin-rich or already near its performance ceiling.
+* Give clear visual and numerical feedback on a rocket's performance
+* Let users compare designs quickly without extra setup
+* Remain simple to use, even in a terminal window
+* Make the code easy to read, expand, and learn from
 
-## PEQ, NPEQ & MIPEQ: Payload Efficiency Metrics
+It focuses on energy efficiency, payload margins, and practical delta-v capability. It also categorises rockets by role (LEO, deep-space, or general-purpose) based on their energy behaviour.
 
-RPAT calculates three primary efficiency quotients:
+---
 
-* **PEQ (Payload Efficiency Quotient)**
-  Defined as the maximum payload the rocket can carry to LEO divided by the initial slope of the ∆v vs. payload curve. This slope, taken at zero payload, represents the rate of delta-v loss per kilogram.
+## Features
 
-* **NPEQ (Normalised PEQ)**
-  Similar in form to PEQ, but instead of using max payload in the numerator, it uses the rocket's initial delta-v (with zero payload). This makes it independent of mission target and better suited for comparing rockets with different total performance levels.
+* **Delta-v vs Payload Graphing** – See how added payload affects performance
+* **Built-in Rocket Presets** – Select from a growing library of real and fictional rockets
+* **Efficiency Scores** – Get quick insights on whether your vehicle is suited to LEO or high-energy missions
+* **Payload Finder** – Reports how much payload can be sent to LEO, GTO, or interplanetary targets
+* **Custom Vehicle Input** – Manually enter your own stage data (dry/wet/ISP)
+* **Readable Output** – Shows stage breakdown and a summary of what your rocket is good at
 
-* **MIPEQ (Mass-Independent PEQ)**
-  A refined logarithmic score accounting for ∆v sensitivity, vehicle mass, and payload fraction:
+---
 
-  ```
-  MIPEQ = -log₁₀( ε / (M × f³) )
-  ```
+## Installation and Requirements
 
-  Where:
-  • **ε** = |d(∆v)/dm| ÷ ∆v₀ — the normalised ∆v sensitivity
-  • **M** = total wet mass of the rocket
-  • **f** = payload fraction (payload mass ÷ total wet mass)
-
-This score is fully normalised and dimensionless, allowing for fair comparisons between vehicles of drastically different sizes and roles.
-
-## How RPAT Calculates These
-
-1. Calculates total ∆v over a range of payloads
-2. Computes initial slope (∆v loss per kg)
-3. Derives:
-
-   * **PEQ** = Max payload ÷ ∆v loss rate
-   * **NPEQ** = Initial ∆v ÷ ∆v loss rate
-   * **MIPEQ** = `-log₁₀( (|d(∆v)/dm| / ∆v₀) / (WetMass × PayloadFraction³) )`
-
-| Metric  | Definition               | Insight Gained                             |
-| ------- | ------------------------ | ------------------------------------------ |
-| `PEQ`   | Max Payload / ∥d(∆v)/dm∥ | Payload per unit ∆v lost                   |
-| `NPEQ`  | ∆v₀ / ∥d(∆v)/dm∥         | Payload margin scaled by energy            |
-| `MIPEQ` | `-log₁₀( ε / (M × f³) )` | Fully normalised energy–mass–payload score |
-
-## Example Values from LVs:
-
-| Launch Vehicle       | PEQ     | NPEQ   | MIPEQ |
-| -------------------- | ------- | ------ | ----- |
-| Falcon 9 FT          | 33,192  | 20,982 | 5.997 |
-| Electron (Rocketlab) | 23      | 965    | 2.110 |
-| Saturn V             | 478,832 | 72,817 | 7.181 |
-| Titan II (ICBM)      | 2,782   | 9,680  | 4.147 |
-
-
-
-## Installation
-
-To install required dependencies:
+RPAT requires Python 3 and the following libraries:
 
 ```bash
-pip install -r requirements.txt
+pip install numpy matplotlib
 ```
 
-To run, simply click one of the .py examples in /Example Scripts or configure RPAT.py with rocket paramaters and run that file. The rest is done automatically.
+To run it, simply execute the main file:
 
-## Mathematical Methodology
+```bash
+python RPAT.py
+```
 
-RPAT derives its performance metrics using a simple yet effective numerical differentiation process applied to the delta-v versus payload curve.
+Rocket data is stored in `rockets.json`. Human-readable explanations for each rocket are provided in `Rockets.txt`.
 
-1. **Delta-v Calculation**
-   For a given payload mass, RPAT computes the total ∆v of the vehicle by summing contributions from each stage using the Tsiolkovsky rocket equation:
+---
 
-   ```
-   ∆v = Isp × g₀ × ln(m₀ / m₁)
-   ```
+## How It Works
 
-   where `m₀` is the initial mass (including payload and upper stages) and `m₁` is the final mass (after propellant is consumed).
+RPAT uses the Tsiolkovsky rocket equation across each stage to calculate total delta-v. It loops through increasing payload values, recomputing delta-v at each step. This forms the basis of a performance curve: how much delta-v you're left with depending on how much payload you're trying to push.
 
-2. **∆v vs Payload Graph**
-   RPAT generates this curve by evaluating ∆v over a range of payloads. It is sampled iteratively in small steps, and the results are stored as `(payload, ∆v)` data pairs.
+The tool then derives several values from this curve:
 
-3. **Numerical Derivative**
-   The rate of ∆v loss per kg of payload (i.e., the slope of the curve) is approximated using finite differences:
+* **Payload limits** for standard mission targets (LEO, GTO, TLI, Mars Transfer)
+* **Stage delta-v breakdown** at those limits (planned, not currently available)
+* **Energy quotient scores** to classify the rocket's role (prone to occasional tweaks in updates)
 
-   ```
-   d(∆v)/dm ≈ (∆v[i+1] - ∆v[i]) / (payload[i+1] - payload[i])
-   ```
+---
 
-   The first derivative at zero payload is taken as the initial slope.
+## Core Metrics
 
-4. **Quotients**
-   This initial slope value, along with total ∆v and maximum payload, feeds into the three core metrics:
+Three key values help summarise a vehicle’s behaviour:
 
-   * **PEQ** = Max payload / |d(∆v)/dm| at payload = 0
-   * **NPEQ** = ∆v₀ / |d(∆v)/dm| at payload = 0
-   * **MIPEQ** = `-log₁₀( (|d(∆v)/dm| / ∆v₀) / (WetMass × PayloadFraction³) )`
+### Low-Energy Quotient (LEQ)
 
-This approach allows RPAT to characterise performance without symbolic calculus or closed-form assumptions — making it well suited for real-world and simulated vehicle configurations.
+Indicates how well the rocket performs in LEO orbits. High LEQ means it delivers a lot of payload relative to its energy loss when increasing mass. It scales with design efficiency and mass ratio.
 
-## Current Limitations
+### High-Energy Quotient (HEQ)
 
-* **No user input yet** as values are hardcoded; input functionality is planned.
-* **No booster support** but SRBs and strap-on boosters will be implemented later.
-* **No crossfeed/asparagus staging** this is unlikely to be supported, but partial modelling via boosters may be possible.
+Derived from the area under the delta-v vs payload curve, then normalised by vehicle mass. High HEQ means the rocket delivers high total impulse and is suited for deep-space or transfer missions.
+
+### Payload Fraction
+
+Simple ratio of payload mass to total launch mass. Gives a general idea of whether a rocket is overbuilt or under-optimised.
+
+---
+
+## Example Output
+
+```text
+Initial ∆v drop per kg    : -1.56 m/s/kg
+
+LEQ (Low-Energy Quotient) : 6.270
+HEQ (High-Energy Quotient): 5.995
+
+Payload Fraction          : 4.37 %
+```
+
+RPAT will also print payload capacities for standard targets like:
+
+* LEO (\~9300 m/s)
+* GTO (\~13,500 m/s)
+* TLI (\~15,300 m/s)
+* Mars Transfer (\~18,500 m/s)
+
+---
+
+## Rocket Library
+
+You can select from a library of built-in rockets. When the program runs, you’ll see a list like:
+
+```text
+0: falcon9 — Falcon 9 Full Thrust (Expended) (SpaceX) [active]
+1: saturnv — Saturn V (NASA, various) [historical]
+2: dolphinex — Dolphin EX (RP-1) [fictional]
+```
+
+Just enter the number or name to select it.
+
+Each rocket has a `type` tag:
+
+* `active`: In service, real-world vehicle (values may change)
+* `historical`: Retired vehicle, values are based on research
+* `fictional`: RP-1 rockets or user-made craft, values are exact from RPAT’s context
+
+All rockets include a `desc` (description) string for easier identification.
+
+---
+
+## Editing or Adding Rockets
+
+You can edit `rockets.json` to add your own vehicles. Each entry contains:
+
+```json
+{"falcon9": {
+  "manStage": 0,
+  "stages"  : 2,
+  "dryMass" : [22000, 4000],
+  "wetMass" : [409000, 111500],
+  "isp"     : [311, 348],
+  "type"    : "Active",
+  "desc"    : "Falcon 9 Full Thrust (Expended) (SpaceX)"
+}}
+```
+
+Use `Rockets.txt` to document your values, assumptions, and sources for transparency.
+
+---
+
+## Sample Vehicle Data Table
+
+| Rocket Name                 | Payload to LEO (kg) | LEQ   | HEQ   |
+| --------------------------- | ------------------- | ----- | ----- |
+| Falcon 9 Block 5 (expended) | 22,773              | 5.918 | 5.198 |
+| Delta IV Medium             | 11,329              | 5.392 | 5.352 |
+| Saturn V                    | 147,160             | 7.450 | 6.434 |
+| N1 (1969)                   | 101,597             | 6.483 | 4.576 |
+
+ This is an example of the output from some of the preset rockets, to be used as a comparison.
+
+---
+
+## Coming Soon / Ideas
+
+* Booster support (SRBs or strap-on side stages)
+* Suborbital calculator (range, apogee, launch angle estimation)
+* Expanded preset library with more real and RP-1 craft
+* Automatic performance summaries based on metrics
+* User inputted fuel reserve system for residual fuel and stage recovery compensation for more accurate figures and to support non-expendable vehicles.
+* A stage-by-stage breakdown of certain trajectories, so you can see at what dV stage separation will occur at for balancing stages properly.
+
+---
+
+RPAT is under active development. If you're designing rockets in KSP, RP-1, or in the real world RPAT is a great comparative tool.
