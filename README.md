@@ -2,7 +2,7 @@
 
 RPAT is a terminal-based tool for analysing the performance of launch vehicles. It's designed for players of KSP (particularly RP-1), amateur aerospace designers, and anyone who wants a quick, clear look at how well a given rocket performs.
 
-This tool isn't meant to replace detailed simulation or flight testing. Instead, it provides instant feedback on vehicle efficiency, stage contribution, and whether your design actually suits your intended mission – whether that's a basic LEO launch or a deep-space payload delivery.
+This tool isn't meant to replace detailed simulation or flight testing. Instead, it provides instant feedback on vehicle efficiency, approximate payload capacities, and whether your design actually suits your intended mission.
 
 ---
 
