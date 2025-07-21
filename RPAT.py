@@ -4,7 +4,7 @@
 ##############################################
 
 
-## version 0.5
+## version 0.65
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,15 +20,16 @@ print("         Created by TotallyAm")
 print("----------------------------------------")
 
 trajectory_targets = {
-    "IRBM (Sub-orbital, est)     ": 6000,
-    "ICBM, (Sub-orbital, est)    ": 7200,
     "LEO (Low Earth Orbit)       ": 9300,
     "LEO (Upper bound)           ": 9600,
-    "GTO (Geostationary Transfer)": 11800,
-    "TLI (Trans-Lunar Injection) ": 12600,
-    "Mars Transfer               ": 12900,
-    "Jupiter Transfer            ": 15600
+    "GTO (Geostationary Transfer)": 11900,
+    "TLI (Trans-Lunar Injection) ": 12700,
+    "Mars Transfer               ": 13100,
+    "Jupiter Transfer            ": 15700
 }
+  #sub-orbital metrics
+  #"IRBM (Sub-orbital, est)     ": 6000,
+  #"ICBM, (Sub-orbital, est)    ": 7200,
 
 ## step factors (more = slower, more accurate)
 
@@ -239,7 +240,8 @@ if GRAPH:
   plt.figure(figsize=(8,5))
   plt.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
   plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
-  plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
+  if DEBUG_MODE: 
+    plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
   plt.xlabel("Payload mass (kg)")
   plt.ylabel("Total Δv (m/s)")
   plt.title(f"Rocket Performance: Payload vs. Δv, {rocketName}")

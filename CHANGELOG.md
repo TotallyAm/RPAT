@@ -1,3 +1,13 @@
+## V0.65 - Tweaking
+
+### Changed:
+
+* Minor tweaks and fixes from V0.6.
+* Actually removed sub-orbital parameters.
+* Improved graph scaling outside of debug mode.
+
+## 
+
 ## V0.6 - Expansionism
 
 ### Added:
@@ -44,7 +54,9 @@ recommended you utilise the rockets.txt lookup table to store the relevant infor
 
 
 ### Notes:
+
 Subsequent updates will NOT include /Example Scripts, this was a placeholder for the json presets before it existed, therefore it will be made redundant with the expansion of rockets.json.
+
 
 
 
