@@ -96,9 +96,9 @@ Payload Fraction          : 4.37 %
 RPAT will also print payload capacities for standard targets like:
 
 * LEO (\~9300 m/s)
-* GTO (\~13,500 m/s)
+* GTO (\~11,900 m/s)
 * TLI (\~15,300 m/s)
-* Mars Transfer (\~18,500 m/s)
+* Mars Transfer (\~13,100 m/s)
 
 ---
 
