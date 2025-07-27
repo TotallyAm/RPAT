@@ -4,13 +4,29 @@ import os
 
 
 
-def loadDefaults():
-  path = os.path.join(os.path.dirname(__file__), "rockets.json")
-  with open(path, "r") as f:
-    return json.load(f)
+def loadRockets():
+  rockets = {}
+  
+  #default rockets
+  defaultPath = os.path.join(os.path.dirname(__file__), "default_rockets.json")
+  with open(defaultPath, "r") as f:
+    rockets.update(json.load(f))
+  
+  #custom rockets
+  customPath = os.path.join(os.path.dirname(__file__), "custom_rockets.json")
+  if os.path.exists(customPath):
+    with open(customPath, "r") as f:
+      customPath = json.load(f)
+      for name, data in customPath.items():
+        if name in rockets:
+          print(f"[Warning] Custom rocket '{name}' conflicts with a default entry and will be skipped.")
+          print("To fix this, please rename the rocket to something non-conflicting")
+        else:
+          rockets[name] = data
+  return rockets
 
 def selectDefault():
-  rockets = loadDefaults()
+  rockets = loadRockets()
   print("\nAvailable Default Rockets:")
   for i, (key, rocket) in enumerate(rockets.items()):
     print(f"{i:3}: {key:2} — {rocket['desc']}")
@@ -36,7 +52,7 @@ def selectDefault():
 
 def manualEntry():
   while True:
-    name = input("What is the name of your rocket?")
+    name = input("What is the name of your rocket? ")
     break
     
   try:

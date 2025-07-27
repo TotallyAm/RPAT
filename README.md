@@ -48,7 +48,9 @@ To run it, simply execute the main file:
 python RPAT.py
 ```
 
-Rocket data is stored in `rockets.json`. Human-readable explanations for each rocket are provided in `Rockets.txt`.
+Preset rocket data is stored in `default_rockets.json`. Human-readable explanations for each rocket are provided in `Rockets.txt`.
+
+If you want to add your own preset rockets, `custom_rockets.json` has some examples, you can modify and add your own in here.
 
 ---
 
@@ -126,7 +128,7 @@ All rockets include a `desc` (description) string for easier identification.
 
 ## Editing or Adding Rockets
 
-You can edit `rockets.json` to add your own vehicles. Each entry contains:
+You can edit `custom_rockets.json` to add your own vehicles. Each entry contains:
 
 ```json
 {"falcon9": {
@@ -160,8 +162,8 @@ Use `Rockets.txt` to document your values, assumptions, and sources for transpar
 ## Coming Soon / Ideas
 
 * Booster support (SRBs or strap-on side stages)
-* Suborbital calculator (range, apogee, launch angle estimation)
-* Expanded preset library with more real and RP-1 craft
+* Suborbital calculator (range, apogee, launch angle estimation) (potentially, not confirmed)
+* Expanded preset library with more real and RP-1 craft (in progress)
 * Automatic performance summaries based on metrics
 * User inputted fuel reserve system for residual fuel and stage recovery compensation for more accurate figures and to support non-expendable vehicles.
 * A stage-by-stage breakdown of certain trajectories, so you can see at what dV stage separation will occur at for balancing stages properly.

@@ -4,10 +4,12 @@
 ##############################################
 
 
-## version 0.65
+## version 0.75
 
 import matplotlib.pyplot as plt
 import numpy as np
+import json
+import os
 from scripts.user_input import getParam
 
 GRAPH = True #whether to run the matplotlib grpahing and subquent experimental analysis - default on
@@ -19,24 +21,27 @@ print("Rocket Performance Analysis Tool (RPAT)")
 print("         Created by TotallyAm")
 print("----------------------------------------")
 
-trajectory_targets = {
-    "LEO (Low Earth Orbit)       ": 9300,
-    "LEO (Upper bound)           ": 9600,
-    "GTO (Geostationary Transfer)": 11900,
-    "TLI (Trans-Lunar Injection) ": 12700,
-    "Mars Transfer               ": 13100,
-    "Jupiter Transfer            ": 15700
-}
-  #sub-orbital metrics
-  #"IRBM (Sub-orbital, est)     ": 6000,
-  #"ICBM, (Sub-orbital, est)    ": 7200,
+
 
 ## step factors (more = slower, more accurate)
 
-coarseFactor = 0.01 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
+coarseFactor = 0.001 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
 fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 30 at least)
 
-#stage param removed from V5 replaced with user friendly alternative
+#loads the trajectory targets
+def loadTargets():
+  path = os.path.join(os.path.dirname(__file__), "scripts", "trajectory_targets.json")
+  with open(path, "r") as f:
+    return json.load(f)
+
+#error checking
+try:
+  trajectory_targets = loadTargets()
+except Exception as e:
+    print("[Error] Failed to load trajectory_targets.json:", e)
+    trajectory_targets = {} 
+
+#this uses user_inputs.py to find the selected rocket info
 result = getParam()
 if result:
   stages, dryMass, wetMass, isp, manStage, rocketName = result
@@ -49,13 +54,13 @@ else:
 print(f"Evaluating {rocketName}.....")
 
 
-
+#this adjusts the definition of rocket mass based on whether the user added the stage masses manually to the first stage
 if MAN_STAGE_ADDITION:
   rocketMass = max(wetMass)
 else:
   rocketMass = sum(wetMass)
 
-
+#finds the dV from mass ratio
 def rocketEquation(dryMass, wetMass, isp):
   #by weight, dV = (isp * g0) * ln(wet mass/dry mass)
   g0 = 9.80665 #m/s^2
@@ -64,10 +69,10 @@ def rocketEquation(dryMass, wetMass, isp):
   deltaV = eV * np.emath.log(massRatio)
   return deltaV
 
+#calculates the dV of each stage + payload
 def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
   totalDv = 0
   upperMass = payloadMass
-  #calculates the dV of each stage + payload
   for i in reversed(range(stages)):
     m0 = wetMass[i] + upperMass
     m1 = dryMass[i] + upperMass
@@ -79,7 +84,7 @@ def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
   return totalDv
 
 
-
+## loops calcaulateTotalDv to find the maximum payload mass for the given target dv
 def payloadFinder(lowBound, highBound, stepSize, targetDv, dryMass, wetMass, isp, stages):
   from collections import namedtuple
   PayloadResult = namedtuple("PayloadResult", ["iterations", "payload", "dv"])
@@ -119,7 +124,7 @@ for name, tgtDv in trajectory_targets.items():
   #coarse pass
   coarse = payloadFinder(
     lowBound=0,
-    highBound=(10 * wetMass[-1]),
+    highBound=(0.3 * rocketMass),
     stepSize=coarseStep,
     targetDv=tgtDv,
     dryMass=dryMass,
@@ -165,7 +170,7 @@ leoPayload = 0
 
 for name, res in results.items():
   print(f"{name:25} -> max payload {res.payload:9,.2f} kg @ Δv {res.dv:7,.2f} m/s  (in {res.iterations} steps)")
-  if(name == "LEO (Low Earth Orbit)       "):
+  if(name == "LEO (Low Earth Orbit)"):
     leoPayload = res.payload
 
 
@@ -206,14 +211,18 @@ if GRAPH:
     # Finite difference: rate of ∆v change per unit payload (i.e., d(∆v)/dm)
     slope   = (delta2v / deltaP) if deltaP != 0 else 0
     dvDerivative.append(slope)
+  
   initialSlope = dvDerivative[0] #m/s/kg
+  
   normalisedEq = -initialSlope / dvs[0] #%
-  #leq = -log10(((d(Δv)/d(payload =0)) / dv(payload = 0)) / (rocket mass * (payload at leo / rocket mass))
 
-  #d(∆v)/dm = raw payload sensitivity
-
-  payloadFraction = leoPayload / (rocketMass)
-  LEQ = -np.log10((normalisedEq) / (rocketMass * (payloadFraction **(3))))
+  if leoPayload >= 0:
+    payloadFraction = leoPayload / (rocketMass)
+    LEQ = -np.log10((normalisedEq) / (rocketMass * (payloadFraction **(3))))
+  else: 
+    payloadFraction = 0
+    LEQ = 0
+    print("Error finding payload fraction and LEQ")
 
   #trapezoidal rule numerical integration
   area = 0

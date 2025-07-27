@@ -1,0 +1,8 @@
+{
+  "LEO (Low Earth Orbit)": 9300,
+  "LEO (Upper bound)": 9600,
+  "GTO (Geostationary Transfer)": 11900,
+  "TLI (Trans-Lunar Injection)": 12700,
+  "Mars Transfer": 13100,
+  "Jupiter Transfer": 15700
+}

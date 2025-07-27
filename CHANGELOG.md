@@ -1,3 +1,31 @@
+## V0.75 - Movement
+
+#### Changed:
+
+* Separated rockets.json into custom\_rockets.json \& default\_rockets.json
+* Improved the comments in rpat.py to make the code more transparent
+* Slightly improved error handling in rpat.py
+* Modified user\_input.py to accommodate the newest changes to rocket loading
+* Separated trajectory\_targets into a new json file, so that they can be more easily modified 
+
+
+
+
+
+### Notes:
+
+You must now port any of your custom rockets into the custom\_rockets.json BEFORE updating, this will prevent your custom
+
+rockets from being overwritten.
+
+This update means that future expansions of default rockets will not impact your custom rockets, from now on, custom\_rockets.json
+
+in the repo will remain as-is, you are free to modify that file in your own copy without fear of it being replaced (as long as you don't
+
+copy the file from the repo into your own).
+
+## 
+
 ## V0.65 - Tweaking
 
 ### Changed:

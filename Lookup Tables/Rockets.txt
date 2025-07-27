@@ -131,19 +131,6 @@ Wet = 111500
 
 ##Fictional
 
-Dolphin (Tranche 2) [RP-1]
-**UPPER STAGES INCLUDED IN LOWER STAGE MASS**
-S1:
-Dry = 207656
-Wet = 700677
-287.5s (avg)
-S2:
-Dry = 11010
-Wet = 186089
-380s (vac)
--fairings included in S2
--interstage removed in S2, included in S1
-
 Dolphin (Trance 2) EX (Three stage ver.)
 -third stage is hydrolox, should increase energy efficiency and therefore quotient score.
 **UPPER STAGES INCLUDED IN LOWER STAGE MASS**
@@ -172,14 +159,6 @@ S2:
 Dry = 12502
 Wet = 135656 
 366s (vac)
-
-
-
-
-
-
-
-
 
 
 
