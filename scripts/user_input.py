@@ -52,6 +52,17 @@ def selectDefault():
 
 def manualEntry():
   while True:
+    response = input("Will you be including the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
+    if response in ("y", "yes", "true"):
+        manStage = True
+        break
+    elif response in ("n", "no", "false"):
+        manStage = False
+        break
+    else:
+        print("Please enter 'y' or 'n'.")
+        
+  while True:
     name = input("What is the name of your rocket? ")
     break
     
@@ -73,17 +84,6 @@ def manualEntry():
     dryMass.append(dry)
     wetMass.append(wet)
     isp.append(isps)
-
-  while True:
-    response = input("Did you include the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
-    if response in ("y", "yes", "true"):
-        manStage = True
-        break
-    elif response in ("n", "no", "false"):
-        manStage = False
-        break
-    else:
-        print("Please enter 'y' or 'n'.")
   
   return stages, dryMass, wetMass, isp, manStage, name
 
