@@ -51,7 +51,7 @@ def selectDefault():
 
 
 def manualEntry():
-    while True:
+  while True:
     response = input("Will you be including the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
     if response in ("y", "yes", "true"):
         manStage = True
@@ -61,7 +61,7 @@ def manualEntry():
         break
     else:
         print("Please enter 'y' or 'n'.")
-      
+        
   while True:
     name = input("What is the name of your rocket? ")
     break
