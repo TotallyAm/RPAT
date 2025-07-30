@@ -4,5 +4,7 @@
   "GTO (Geostationary Transfer)": 11900,
   "TLI (Trans-Lunar Injection)": 12700,
   "Mars Transfer": 13100,
+  "GEO (Kourou)": 13180,
+  "GEO (Florida)": 13550,
   "Jupiter Transfer": 15700
 }
