@@ -1,13 +1,24 @@
 {
-  "falcon9": {
+  "f9": {
   "manStage": 0,
   "stages"  : 2,
   "dryMass" : [22000, 4000],
   "wetMass" : [409000, 111500],
   "isp"     : [311, 348],
   "type"    : "Active",
-  "desc"    : "Falcon 9 Block 5 (Expended) (SpaceX)"
+  "desc"    : "Falcon 9 Block 5 (Drone Ship Landing) (SpaceX)",
+  "fuel_reserve" : [38700, 0]
+  },
   
+  "f9expended": {
+  "manStage": 0,
+  "stages"  : 2,
+  "dryMass" : [22000, 4000],
+  "wetMass" : [409000, 111500],
+  "isp"     : [311, 348],
+  "type"    : "Active",
+  "desc"    : "Falcon 9 Block 5 (Fully Expended) (SpaceX)",
+  "fuel_reserve" : [0, 0]
   },
 
   "electron": {

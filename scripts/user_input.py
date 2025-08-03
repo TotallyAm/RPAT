@@ -17,13 +17,40 @@ def loadRockets():
   if os.path.exists(customPath):
     with open(customPath, "r") as f:
       customPath = json.load(f)
+      
       for name, data in customPath.items():
+        
         if name in rockets:
           print(f"[Warning] Custom rocket '{name}' conflicts with a default entry and will be skipped.")
           print("To fix this, please rename the rocket to something non-conflicting")
+        
         else:
           rockets[name] = data
+  
   return rockets
+
+
+def addReserves(stages, fuel_reserve, dryMass, wetMass):
+  dryMassAdj = []
+  wetMassAdj = []
+  for i in range(stages):
+    reserve = fuel_reserve[i]
+    prop_mass = wetMass[i] - dryMass[i]
+    if reserve > prop_mass:
+      print("Fuel reserves are set up incorrectly, resetting")
+      reserve = 0
+    
+    if reserve > 0:
+      print(f"Stage {i + 1} has a fuel reserve of {reserve} kg.")
+      dryMassAdj.append(dryMass[i] + reserve)
+      wetMassAdj.append(wetMass[i] - reserve)
+    
+    else:
+      dryMassAdj.append(dryMass[i])
+      wetMassAdj.append(wetMass[i])
+  
+  return dryMassAdj, wetMassAdj
+
 
 def selectDefault():
   rockets = loadRockets()
@@ -31,37 +58,43 @@ def selectDefault():
   for i, (key, rocket) in enumerate(rockets.items()):
     print(f"{i:3}: {key:2} — {rocket['desc']}")
   selected = input("\nEnter the rocket name or number: ").lower().strip()
+  
   if selected.isdigit():
     index = int(selected)
+    
     if 0 <= index < len(rockets):
       key = list(rockets.keys())[index]
+    
     else:
       print("Invalid selection. Please try again.")
       return None
+  
   elif selected in rockets:
     key = selected
+  
   else:
     print("Rocket not found, please try again.")
 
   rocket = rockets[key]
-  print(f"Selected rocket: {rocket['desc']}")
-  return rocket["stages"], rocket["dryMass"], rocket["wetMass"], rocket["isp"], rocket["manStage"], rocket["desc"]
   
+  fuel_reserve = rocket.get("fuel_reserve", [0] * rocket["stages"])
+  
+  dryMassAdj, wetMassAdj = addReserves(rocket["stages"], fuel_reserve, rocket["dryMass"], rocket["wetMass"])
 
-
-
+  print(f"Selected rocket: {rocket['desc']}")
+  
+  return (
+    rocket["stages"],
+    dryMassAdj,
+    wetMassAdj,
+    rocket["dryMass"],
+    rocket["wetMass"],
+    rocket["isp"],
+    rocket["manStage"],
+    rocket["desc"],
+  )
+  
 def manualEntry():
-  while True:
-    response = input("Will you be including the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
-    if response in ("y", "yes", "true"):
-        manStage = True
-        break
-    elif response in ("n", "no", "false"):
-        manStage = False
-        break
-    else:
-        print("Please enter 'y' or 'n'.")
-        
   while True:
     name = input("What is the name of your rocket? ")
     break
@@ -70,10 +103,26 @@ def manualEntry():
     stages = int(input("How many stages does your rocket have? "))
   except ValueError: 
     print("Invalid input, please try again.")
+
+  while True:
+    response = input("Will you be including the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
+    
+    if response in ("y", "yes", "true"):
+        manStage = True
+        break
+    
+    elif response in ("n", "no", "false"):
+        manStage = False
+        break
+    
+    else:
+        print("Please enter 'y' or 'n'.")
     
     
   dryMass = []
+  dryMassAdj = []
   wetMass = []
+  wetMassAdj = []
   isp     = []
 
   for i in range(stages):
@@ -84,17 +133,34 @@ def manualEntry():
     dryMass.append(dry)
     wetMass.append(wet)
     isp.append(isps)
+
+  fuel_reserve = [0] * stages
+
+  dryMassAdj, wetMassAdj = addReserves(stages, fuel_reserve, dryMass, wetMass)
   
-  return stages, dryMass, wetMass, isp, manStage, name
+    
+  return (
+    stages, 
+    dryMassAdj,
+    wetMassAdj,
+    dryMass,
+    wetMass,
+    isp, 
+    manStage, 
+    name
+  )
 
 
 def getParam():
   while True:
     response = input("Do you want to use a preset rocket? (y/n): ").strip().lower()
+    
     if response in ("y", "yes", "true"):
         return selectDefault()
+    
     elif response in ("n", "no", "false"):
         return manualEntry()
+    
     else:
         print("Please enter 'y' or 'n'.")
         continue

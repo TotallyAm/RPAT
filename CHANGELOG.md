@@ -1,3 +1,41 @@
+## V0.85 - Bingo Fuel
+
+#### Added:
+
+* Fuel reserve system added to the \_rocket.json files.
+* Automatic conversion of the reserve fuel to penalty mass in user\_inputs.py.
+* RPAT now uses the mass adjusted for reserves to calculate payload capacity.
+* Added a new curve to the graph for recoverable rockets, showing delta V penalty of recovery. This is detected
+
+&nbsp;  automatically based upon the fuel reserves
+
+* Dark mode! It can be toggled at the top of RPAT.py via DARK\_MODE = 
+
+#### 
+
+#### 
+
+#### Changed:
+
+* The way RPAT.py generates the graphs has been refactored to support the new curve, it is now a separate helper function.
+* Graphs have been further refined to make them a bit clearer to the user, outside of debug mode.
+
+
+
+
+
+#### Notes:
+
+Although fuel\_reserves has been added as a variable to a default rocket (falcon 9), it does not need to be added for RPAT to work,
+
+if you do not include this variable, it is generated as an empty array and will not impact the calculations or graphs. Overall, 
+
+this feature was designed to make RPAT compatible with propulsively recovered rockets, and to support fuel residuals. It is not
+
+completely without fault, but it is a good estimation if you can find the data on the rocket.
+
+## 
+
 ## V0.75 - Movement
 
 #### Changed:
@@ -6,7 +44,7 @@
 * Improved the comments in rpat.py to make the code more transparent
 * Slightly improved error handling in rpat.py
 * Modified user\_input.py to accommodate the newest changes to rocket loading
-* Separated trajectory\_targets into a new json file, so that they can be more easily modified 
+* Separated trajectory\_targets into a new json file, so that they can be more easily modified
 
 
 

@@ -109,9 +109,9 @@ RPAT will also print payload capacities for standard targets like:
 You can select from a library of built-in rockets. When the program runs, you’ll see a list like:
 
 ```text
-0: falcon9 — Falcon 9 Full Thrust (Expended) (SpaceX) [active]
-1: saturnv — Saturn V (NASA, various) [historical]
-2: dolphinex — Dolphin EX (RP-1) [fictional]
+0: falcon9 — Falcon 9 Full Thrust (Expended) (SpaceX)
+1: saturnv — Saturn V (NASA, various)
+2: dolphinex — Dolphin EX (RP-1)
 ```
 
 Just enter the number or name to select it.
@@ -131,16 +131,28 @@ All rockets include a `desc` (description) string for easier identification.
 You can edit `custom_rockets.json` to add your own vehicles. Each entry contains:
 
 ```json
-{"falcon9": {
+{
+  "f9": {
   "manStage": 0,
   "stages"  : 2,
   "dryMass" : [22000, 4000],
   "wetMass" : [409000, 111500],
   "isp"     : [311, 348],
   "type"    : "Active",
-  "desc"    : "Falcon 9 Full Thrust (Expended) (SpaceX)"
-}}
+  "desc"    : "Falcon 9 Block 5 (Drone Ship Landing) (SpaceX)",
+  "fuel_reserve" : [38700, 0]
+  }
+}
 ```
+
+Most of these variables should be self explanatory, however a few will need more explanation:
+
+- manStage is a boolean to declare whether the upper stage masses have been added to the lower stages,
+for example, adding the wet mass of stage 2 to stage 1. This usually isn't the case, but make sure to
+declare it if it is.
+- fuel_reserve is a list of the fuel you want reserved for each stage, for example if the first stage
+lands like in our example above. This does not need to be declared if you don't intend to reserve fuel.
+
 
 Use `Rockets.txt` to document your values, assumptions, and sources for transparency.
 

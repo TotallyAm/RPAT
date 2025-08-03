@@ -4,7 +4,7 @@
 ##############################################
 
 
-## version 0.75
+## version 0.85 Bingo Fuel
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,8 +13,16 @@ import os
 from scripts.user_input import getParam
 
 GRAPH = True #whether to run the matplotlib grpahing and subquent experimental analysis - default on
+DARK_MODE = True
 DEBUG_MODE = False #whether to include debugging messages in the log - default off
-MAN_STAGE_ADDITION = False #if the mass of subsequent stages has been added to the mass of each stage, do not change
+
+
+## step factors (more = slower, more accurate)
+
+coarseFactor = 0.001 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
+fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 30 at least)
+
+man_stage_addition = False # leave this alone
 
 print("----------------------------------------")
 print("Rocket Performance Analysis Tool (RPAT)")
@@ -22,11 +30,6 @@ print("         Created by TotallyAm")
 print("----------------------------------------")
 
 
-
-## step factors (more = slower, more accurate)
-
-coarseFactor = 0.001 #factor for the step rate of the coarse calculations (suggest 0.03 at least)
-fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 30 at least)
 
 #loads the trajectory targets
 def loadTargets():
@@ -41,21 +44,23 @@ except Exception as e:
     print("[Error] Failed to load trajectory_targets.json:", e)
     trajectory_targets = {} 
 
+
+
 #this uses user_inputs.py to find the selected rocket info
 result = getParam()
 if result:
-  stages, dryMass, wetMass, isp, manStage, rocketName = result
-  MAN_STAGE_ADDITION = manStage
+  stages, dryMass, wetMass, rawDryMass, rawWetMass, isp, manStage, rocketName = result
+  man_stage_addition = manStage
   if DEBUG_MODE:
-   print(f" Manual Stage Addition: {MAN_STAGE_ADDITION}")
+   print(f" Manual Stage Addition: {man_stage_addition}")
 else:
   print("Error, please try again")
 
-print(f"Evaluating {rocketName}.....")
+print(f"\nEvaluating {rocketName}.....")
 
 
 #this adjusts the definition of rocket mass based on whether the user added the stage masses manually to the first stage
-if MAN_STAGE_ADDITION:
+if man_stage_addition:
   rocketMass = max(wetMass)
 else:
   rocketMass = sum(wetMass)
@@ -78,10 +83,28 @@ def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
     m1 = dryMass[i] + upperMass
     dv = rocketEquation(m1, m0, isp[i])
     totalDv += dv
-    if MAN_STAGE_ADDITION == False:
+    if man_stage_addition == False:
       upperMass = m0
     
   return totalDv
+
+## creates an array for a payload graph
+def payloadCurveGenerator(dryMass, wetMass, isp, stages, step, maxPayload, cutoff):
+  payloads   = [] #x axis
+  dvs        = [] #y axis
+  p          = 0.0
+  iterations = 0
+
+  while p <= maxPayload:
+    dv = calculateTotalDv(dryMass, wetMass, isp, p, stages)
+    payloads.append(p)
+    dvs.append(dv)
+    if dv <= cutoff:
+      break
+    p += step
+    iterations += 1
+  
+  return payloads, dvs, iterations
 
 
 ## loops calcaulateTotalDv to find the maximum payload mass for the given target dv
@@ -169,7 +192,7 @@ print("\n=== Payload Capacity by Target Δv ===")
 leoPayload = 0
 
 for name, res in results.items():
-  print(f"{name:25} -> max payload {res.payload:9,.2f} kg @ Δv {res.dv:7,.2f} m/s  (in {res.iterations} steps)")
+  print(f"{name:30} -> max payload {res.payload:9,.2f} kg @ Δv {res.dv:7,.2f} m/s  (in {res.iterations} steps)")
   if(name == "LEO (Low Earth Orbit)"):
     leoPayload = res.payload
 
@@ -181,23 +204,22 @@ if GRAPH:
   step          = wetMass[-1] * 0.002 #kg
   maxPayload    = rocketMass * 0.1 #kg
 
-  payloads   = [] #x axis
-  dvs        = [] #y axis
-  p          = 0.0
-  iterations = 0
 
-  
-  
-  while p <= maxPayload:
-    dv = calculateTotalDv(dryMass, wetMass, isp, p, stages)
-    payloads.append(p)
-    dvs.append(dv)
-    if dv <= cutoff:
-        break
-    p += step
-    iterations += 1
-  
-  
+  payloads, dvs, iterations = payloadCurveGenerator(
+    dryMass, wetMass, isp, stages, step, maxPayload, cutoff
+  )
+
+
+  #checking if it is worth it to plot the expended graph
+  totalReserve = sum(np.array(rawWetMass) - np.array(wetMass))
+  reserveFraction = totalReserve / sum(rawWetMass)
+  plot_raw_curve = reserveFraction > 0.04  # 2% threshold
+
+  if plot_raw_curve:
+    rawPayloads, rawDvs, rawIterations = payloadCurveGenerator(
+      rawDryMass, rawWetMass, isp, stages, step, maxPayload, cutoff
+    )
+
 
 
   #numerical calculus calculations for the metrics:
@@ -246,11 +268,36 @@ if GRAPH:
   
   #plot for dv = f(payload)
   
-  plt.figure(figsize=(8,5))
+  if DARK_MODE:
+    plt.style.use('dark_background')
+    fig = plt.figure(figsize=(8,5), facecolor='black')
+    ax = plt.gca()
+    ax.set_facecolor('black')
+    plt.grid(color='lightgrey', alpha=0.2)
+  else: plt.figure(figsize=(8,5))
+  
+  
   plt.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
-  plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
+  
+  if plot_raw_curve:
+    plt.plot(rawPayloads, rawDvs, '--', lw=2, label="Achieved Δv without fuel reserves.")
+    min_len = min(len(payloads), len(rawDvs))
+    plt.fill_between(
+      payloads[:min_len],
+      dvs[:min_len],
+      rawDvs[:min_len],
+      color='orange', alpha=0.2,
+      label="Performance loss due to reserves"
+    )
+  
   if DEBUG_MODE: 
+    plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
     plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
+  else:
+    plt.xlim(0, (payloads[-1] + 10))  # x-axis from 0 to your maximum payload
+    plt.ylim(cutoff - 400, None)       # y-axis from 0 to auto-detect maximum
+
+  
   plt.xlabel("Payload mass (kg)")
   plt.ylabel("Total Δv (m/s)")
   plt.title(f"Rocket Performance: Payload vs. Δv, {rocketName}")
@@ -262,13 +309,16 @@ if GRAPH:
   
   
   #plot for d(dv) = f'(payload)
-   
-  plt.figure(figsize=(8,5))
+  if DARK_MODE:
+     fig = plt.figure(figsize=(8,5), facecolor='black')
+     plt.grid(color='lightgrey', alpha=0.2)
+  else: plt.figure(figsize=(8,5))
+  
   plt.plot(payloads[1:], dvDerivative, '-', lw=2, color='orange', label="d(Δv)/d(payload)")
   plt.xlabel("Payload mass (kg)")
   plt.ylabel("Marginal ∆v loss (m/s per kg payload)")
   plt.title(f"Δv Sensitivity to Payload, {rocketName}")
-  plt.axhline(0, color='gray', linestyle='--')
+  plt.axhline(0, color='grey', linestyle='--')
   plt.grid(True)
   plt.legend()
   plt.tight_layout()
