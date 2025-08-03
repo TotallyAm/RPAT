@@ -1,6 +1,6 @@
 import json
 import os
-
+from scripts.ansi import *
 
 
 
@@ -53,59 +53,61 @@ def addReserves(stages, fuel_reserve, dryMass, wetMass):
 
 
 def selectDefault():
-  rockets = loadRockets()
-  print("\nAvailable Default Rockets:")
-  for i, (key, rocket) in enumerate(rockets.items()):
-    print(f"{i:3}: {key:2} — {rocket['desc']}")
-  selected = input("\nEnter the rocket name or number: ").lower().strip()
-  
-  if selected.isdigit():
-    index = int(selected)
+    rockets = loadRockets()
+    print(YELLOW("\nAvailable Default Rockets:"))
+    for i, (key, rocket) in enumerate(rockets.items()):
+        print(f"{GRAY(f'{i:3}')} : {D_GRAY(key):2} — {GRAY(rocket['desc'])}")
     
-    if 0 <= index < len(rockets):
-      key = list(rockets.keys())[index]
+    selected = input(f"\n{GREEN('Enter the rocket name or number: ')}").lower().strip()
+    
+    if selected.isdigit():
+        index = int(selected)
+        
+        if 0 <= index < len(rockets):
+            key = list(rockets.keys())[index]
+        else:
+            print(RED("Invalid selection. Please try again."))
+            return None
+    
+    elif selected in rockets:
+        key = selected
     
     else:
-      print("Invalid selection. Please try again.")
-      return None
-  
-  elif selected in rockets:
-    key = selected
-  
-  else:
-    print("Rocket not found, please try again.")
+        print(RED("Rocket not found, please try again."))
+        return None
 
-  rocket = rockets[key]
-  
-  fuel_reserve = rocket.get("fuel_reserve", [0] * rocket["stages"])
-  
-  dryMassAdj, wetMassAdj = addReserves(rocket["stages"], fuel_reserve, rocket["dryMass"], rocket["wetMass"])
+    rocket = rockets[key]
 
-  print(f"Selected rocket: {rocket['desc']}")
-  
-  return (
-    rocket["stages"],
-    dryMassAdj,
-    wetMassAdj,
-    rocket["dryMass"],
-    rocket["wetMass"],
-    rocket["isp"],
-    rocket["manStage"],
-    rocket["desc"],
-  )
+    fuel_reserve = rocket.get("fuel_reserve", [0] * rocket["stages"])
+
+    dryMassAdj, wetMassAdj = addReserves(rocket["stages"], fuel_reserve, rocket["dryMass"], rocket["wetMass"])
+
+    print(f"{GREEN('Selected rocket:')} {GRAY(rocket['desc'])}")
+
+    return (
+        rocket["stages"],
+        dryMassAdj,
+        wetMassAdj,
+        rocket["dryMass"],
+        rocket["wetMass"],
+        rocket["isp"],
+        rocket["manStage"],
+        rocket["desc"],
+    )
+
   
 def manualEntry():
   while True:
-    name = input("What is the name of your rocket? ")
+    name = input(GREEN("What is the name of your rocket? "))
     break
     
   try:
-    stages = int(input("How many stages does your rocket have? "))
+    stages = int(input(GREEN("How many stages does your rocket have? ")))
   except ValueError: 
     print("Invalid input, please try again.")
 
   while True:
-    response = input("Will you be including the mass of the upper stages in the lower stages? (y/n): ").strip().lower()
+    response = input(GREEN("Will you be including the mass of the upper stages in the lower stages? (y/n): ")).strip().lower()
     
     if response in ("y", "yes", "true"):
         manStage = True
@@ -116,7 +118,7 @@ def manualEntry():
         break
     
     else:
-        print("Please enter 'y' or 'n'.")
+        print(GREEN("Please enter 'y' or 'n'."))
     
     
   dryMass = []
@@ -126,10 +128,10 @@ def manualEntry():
   isp     = []
 
   for i in range(stages):
-    print(f"\nStage {i+1}:")
-    dry  = float(input("  Dry mass (kg) : "))
-    wet  = float(input("  Wet Mass (kg) : "))
-    isps = float(input("  ISP (s)       : "))
+    print(YELLOW(f"\nStage {i+1}:"))
+    dry  = float(input(GREEN("  Dry mass (kg) : ")))
+    wet  = float(input(GREEN("  Wet Mass (kg) : ")))
+    isps = float(input(GREEN("  ISP (s)       : ")))
     dryMass.append(dry)
     wetMass.append(wet)
     isp.append(isps)
@@ -153,7 +155,7 @@ def manualEntry():
 
 def getParam():
   while True:
-    response = input("Do you want to use a preset rocket? (y/n): ").strip().lower()
+    response = input(GREEN("\nDo you want to use a preset rocket? (y/n): ")).strip().lower()
     
     if response in ("y", "yes", "true"):
         return selectDefault()

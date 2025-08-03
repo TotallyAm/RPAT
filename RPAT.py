@@ -11,10 +11,12 @@ import numpy as np
 import json
 import os
 from scripts.user_input import getParam
+from scripts.ansi import *
 
 GRAPH = True #whether to run the matplotlib grpahing and subquent experimental analysis - default on
 DARK_MODE = True
 DEBUG_MODE = False #whether to include debugging messages in the log - default off
+
 
 
 ## step factors (more = slower, more accurate)
@@ -24,10 +26,10 @@ fineFactor   = 40   #factor for the step rate of the fine calculations (suggest 
 
 man_stage_addition = False # leave this alone
 
-print("----------------------------------------")
-print("Rocket Performance Analysis Tool (RPAT)")
-print("         Created by TotallyAm")
-print("----------------------------------------")
+print(D_GRAY("----------------------------------------"))
+print(GRAY("Rocket Performance Analysis Tool (RPAT)"))
+print(GRAY("         Created by TotallyAm"))
+print(D_GRAY("----------------------------------------"))
 
 
 
@@ -56,7 +58,7 @@ if result:
 else:
   print("Error, please try again")
 
-print(f"\nEvaluating {rocketName}.....")
+print(GRAY(f"\nEvaluating {rocketName}....."))
 
 
 #this adjusts the definition of rocket mass based on whether the user added the stage masses manually to the first stage
@@ -187,18 +189,18 @@ for name, tgtDv in trajectory_targets.items():
   results[name] = fine
 
 
-print("\n=== Payload Capacity by Target Δv ===")
+print(YELLOW("\n=== Payload Capacity by Target Δv ==="))
 
 leoPayload = 0
 
 for name, res in results.items():
-  print(f"{name:30} -> max payload {res.payload:9,.2f} kg @ Δv {res.dv:7,.2f} m/s  (in {res.iterations} steps)")
+  print(f"{GRAY(name):50} {D_GRAY('-> max payload')} {res.payload:9,.2f} kg @ Δv {res.dv:7,.2f} m/s  {D_GRAY(f'(in {res.iterations} steps)')}")
   if(name == "LEO (Low Earth Orbit)"):
     leoPayload = res.payload
 
 
 if GRAPH:
-  print("Graphing rocket performance......")
+  print("\nGraphing rocket performance......")
   
   cutoff        = 9200 #m/s #final cut off of the graph, leave this alone as it impacts the integral
   step          = wetMass[-1] * 0.002 #kg
@@ -260,69 +262,68 @@ if GRAPH:
 
   #print quotients
   
-  print(f"\nInitial ∆v drop per kg    : {initialSlope:.2f} m/s/kg")
-  print(f"\nLEQ (Low-Energy Quotient) : {LEQ:.3f}")
-  print(f"HEQ (High-Energy Quotient): {HEQ:.3f}")
-  print(f"\nPayload Fraction          : {(payloadFraction) * 100:.3f} %")
-  
-  
+  print(f"\n{GRAY('Initial ∆v drop per kg'):<30}: {D_GRAY(f'{initialSlope:.2f} m/s/kg')}")
+  print(f"{GRAY('LEQ (Low-Energy Quotient)'):<30}: {D_GRAY(f'{LEQ:.3f}')}")
+  print(f"{GRAY('HEQ (High-Energy Quotient)'):<30}: {D_GRAY(f'{HEQ:.3f}')}")
+  print(f"\n{GRAY('Payload Fraction'):<30}: {D_GRAY(f'{(payloadFraction) * 100:.3f} %')}")
+    
+    
   #plot for dv = f(payload)
-  
+  # Plot 1
   if DARK_MODE:
-    plt.style.use('dark_background')
-    fig = plt.figure(figsize=(8,5), facecolor='black')
-    ax = plt.gca()
-    ax.set_facecolor('black')
-    plt.grid(color='lightgrey', alpha=0.2)
-  else: plt.figure(figsize=(8,5))
-  
-  
-  plt.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
-  
-  if plot_raw_curve:
-    plt.plot(rawPayloads, rawDvs, '--', lw=2, label="Achieved Δv without fuel reserves.")
-    min_len = min(len(payloads), len(rawDvs))
-    plt.fill_between(
-      payloads[:min_len],
-      dvs[:min_len],
-      rawDvs[:min_len],
-      color='orange', alpha=0.2,
-      label="Performance loss due to reserves"
-    )
-  
-  if DEBUG_MODE: 
-    plt.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
-    plt.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
+      plt.style.use('dark_background')
+      fig1 = plt.figure(figsize=(8, 5), facecolor='black')
+      ax1 = fig1.add_subplot(111)
+      ax1.set_facecolor('black')
+      ax1.grid(color='lightgrey', alpha=0.2)
   else:
-    plt.xlim(0, (payloads[-1] + 10))  # x-axis from 0 to your maximum payload
-    plt.ylim(cutoff - 400, None)       # y-axis from 0 to auto-detect maximum
+      fig1 = plt.figure(figsize=(8, 5))
+      ax1 = fig1.add_subplot(111)
 
-  
-  plt.xlabel("Payload mass (kg)")
-  plt.ylabel("Total Δv (m/s)")
-  plt.title(f"Rocket Performance: Payload vs. Δv, {rocketName}")
-  plt.legend(loc='best')
-  plt.grid(True)
-  plt.tight_layout()
-  print(f"Graphing completed with {iterations} iterations.")
-  plt.show()
-  
-  
-  #plot for d(dv) = f'(payload)
+  ax1.plot(payloads, dvs, '-', lw=2, label="Achieved Δv")
+
+  if plot_raw_curve:
+      ax1.plot(rawPayloads, rawDvs, '--', lw=2, label="Achieved Δv without fuel reserves.")
+      min_len = min(len(payloads), len(rawDvs))
+      ax1.fill_between(
+          payloads[:min_len],
+          dvs[:min_len],
+          rawDvs[:min_len],
+          color='orange', alpha=0.2,
+          label="Performance loss due to reserves"
+      )
+
+  if DEBUG_MODE:
+      ax1.axhline(cutoff, color='red', linestyle='--', label=f"Δv cutoff ({cutoff}) m/s")
+      ax1.axvline(maxPayload, color='red', linestyle='--', label=f"Payload cutoff: ({maxPayload:.1f}) kg")
+  else:
+      ax1.set_xlim(0, (payloads[-1] + 10))
+      ax1.set_ylim(cutoff - 400, None)
+
+  ax1.set_xlabel("Payload mass (kg)")
+  ax1.set_ylabel("Total Δv (m/s)")
+  ax1.set_title(f"Rocket Performance: Payload vs. Δv, {rocketName}")
+  ax1.legend(loc='best')
+  ax1.grid(True)
+  fig1.tight_layout()
+
+  # Plot 2
   if DARK_MODE:
-     fig = plt.figure(figsize=(8,5), facecolor='black')
-     plt.grid(color='lightgrey', alpha=0.2)
-  else: plt.figure(figsize=(8,5))
-  
-  plt.plot(payloads[1:], dvDerivative, '-', lw=2, color='orange', label="d(Δv)/d(payload)")
-  plt.xlabel("Payload mass (kg)")
-  plt.ylabel("Marginal ∆v loss (m/s per kg payload)")
-  plt.title(f"Δv Sensitivity to Payload, {rocketName}")
-  plt.axhline(0, color='grey', linestyle='--')
-  plt.grid(True)
-  plt.legend()
-  plt.tight_layout()
-  plt.show()
+      fig2 = plt.figure(figsize=(8, 5), facecolor='black')
+      ax2 = fig2.add_subplot(111)
+      ax2.set_facecolor('black')
+      ax2.grid(color='lightgrey', alpha=0.2)
+  else:
+      fig2 = plt.figure(figsize=(8, 5))
+      ax2 = fig2.add_subplot(111)
 
-  
-  
+  ax2.plot(payloads[1:], dvDerivative, '-', lw=2, color='orange', label="d(Δv)/d(payload)")
+  ax2.set_xlabel("Payload mass (kg)")
+  ax2.set_ylabel("Marginal ∆v loss (m/s per kg payload)")
+  ax2.set_title(f"Δv Sensitivity to Payload, {rocketName}")
+  ax2.axhline(0, color='grey', linestyle='--')
+  ax2.grid(True)
+  ax2.legend()
+  fig2.tight_layout()
+
+  plt.show()
