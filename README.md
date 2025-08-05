@@ -173,12 +173,21 @@ Use `Rockets.txt` to document your values, assumptions, and sources for transpar
 
 ## Coming Soon / Ideas
 
+<<<<<<< Updated upstream
 * Booster support (SRBs or strap-on side stages) (Coming soon)
 * Suborbital calculator (range, apogee, launch angle estimation) (potentially, not confirmed)
 * Expanded preset library with more real and RP-1 craft (in progress)
 * Automatic performance summaries based on metrics (potentially)
 * User inputted fuel reserve system for residual fuel and stage recovery compensation for more accurate figures and to support non-expendable vehicles. (Mostly done)
 * A stage-by-stage breakdown of certain trajectories, so you can see at what dV stage separation will occur at for balancing stages properly. (In progress)
+=======
+* Booster support (SRBs or strap-on side stages)
+* Suborbital calculator (range, apogee, launch angle estimation) (potentially, not confirmed)
+* Expanded preset library with more real and RP-1 craft (in progress)
+* Automatic performance summaries based on metrics
+* User inputted fuel reserve system for residual fuel and stage recovery compensation for more accurate figures and to support non-expendable vehicles.
+* A stage-by-stage breakdown of certain trajectories, so you can see at what dV stage separation will occur at for balancing stages properly.
+>>>>>>> Stashed changes
 
 ---
 

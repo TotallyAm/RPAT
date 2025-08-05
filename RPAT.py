@@ -3,6 +3,7 @@
 ########## Created by TotallyAm ##############
 ##############################################
 
+<<<<<<< Updated upstream
 
 ## version 0.85 Bingo Fuel
 
@@ -87,6 +88,54 @@ def calculateTotalDv(dryMass, wetMass, isp, payloadMass, stages):
       upperMass = m0
     
   return totalDv
+=======
+
+## version 0.90 - MECO
+
+
+import json
+import os
+import time
+from scripts.user_input import rocket
+from scripts.ansi import *
+from scripts.payload import trajectories
+from scripts.graphing import graph
+from config import DEBUG_MODE, GRAPH, TRAJECTORY_TARGETS_PATH
+
+
+print(D_GRAY("----------------------------------------"))
+print(GRAY("Rocket Performance Analysis Tool (RPAT)"))
+print(GRAY("         Created by TotallyAm"))
+print(D_GRAY("----------------------------------------"))
+
+
+#loads the trajectory targets
+def loadTargets():
+  path = os.path.join(os.path.dirname(__file__), TRAJECTORY_TARGETS_PATH)
+  with open(path, "r") as f:
+    return json.load(f)
+
+#error checking
+try:
+  trajectory_targets = loadTargets()
+except Exception as e:
+    print("[Error] Failed to load trajectory_targets.json:", e)
+    trajectory_targets = {} 
+
+
+print(GRAY(f"\nEvaluating {rocket.rocketName}....."))
+
+startTime = time.perf_counter()
+
+
+leoPayload = trajectories(rocket, trajectory_targets)
+
+if DEBUG_MODE and not GRAPH:
+    deltaTime = time.perf_counter() - startTime
+    print(f"\nThis program took {(deltaTime * 1000):.0f} ms to complete.")
+elif GRAPH:
+  graph(rocket, leoPayload)
+>>>>>>> Stashed changes
 
 ## creates an array for a payload graph
 def payloadCurveGenerator(dryMass, wetMass, isp, stages, step, maxPayload, cutoff):
@@ -107,6 +156,7 @@ def payloadCurveGenerator(dryMass, wetMass, isp, stages, step, maxPayload, cutof
   return payloads, dvs, iterations
 
 
+<<<<<<< Updated upstream
 ## loops calcaulateTotalDv to find the maximum payload mass for the given target dv
 def payloadFinder(lowBound, highBound, stepSize, targetDv, dryMass, wetMass, isp, stages):
   from collections import namedtuple
@@ -323,6 +373,10 @@ if GRAPH:
   plt.legend()
   plt.tight_layout()
   plt.show()
+=======
+
+
+>>>>>>> Stashed changes
 
   
   
