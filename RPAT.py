@@ -6,21 +6,22 @@
 
 ## version 0.90 - MECO
 
-
+from scripts.ansi import *
 import json
 import os
 import time
-from scripts.user_input import rocket
-from scripts.ansi import *
-from scripts.payload import trajectories
-from scripts.graphing import graph
-from config import DEBUG_MODE, GRAPH, TRAJECTORY_TARGETS_PATH
-
 
 print(D_GRAY("----------------------------------------"))
 print(GRAY("Rocket Performance Analysis Tool (RPAT)"))
 print(GRAY("         Created by TotallyAm"))
 print(D_GRAY("----------------------------------------"))
+
+
+from scripts.user_input import rocket
+from scripts.payload import trajectories
+from scripts.graphing import graph
+from config import DEBUG_MODE, GRAPH, TRAJECTORY_TARGETS_PATH
+
 
 
 #loads the trajectory targets
