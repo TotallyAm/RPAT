@@ -93,22 +93,22 @@
   "delta-4m-star48b": {
     "type"              : "Hypothetical",
     "family"            : "Delta IV (ULA)",
-    "variant"           : "Medium (single stick) + Star 48B",
+    "variant"           : "Medium (single stick) + Star 48BL",
     "man_stage_add"     : 0,
     "stages"            : 3,
-    "dry_mass"          : [26760, 2850, 126],
-    "wet_mass"          : [226400, 24170, 2137],
-    "isp"               : [370, 462, 286],
+    "dry_mass"          : [26760, 2850, 131],
+    "wet_mass"          : [226400, 24170, 2141],
+    "isp"               : [370, 462, 292],
     "main_stage_thrust" : 3033.3
   },
 
     "delta-4s-star48b": {
     "type"              : "Hypothetical",
     "family"            : "Delta IV (ULA)",
-    "variant"           : "Medium (single stick) + Delta K + Star 48B",
+    "variant"           : "Medium (single stick) + Delta K + Star 48BL",
     "man_stage_add"     : 0,
     "stages"            : 3,
-    "dry_mass"          : [26760, 950, 126],
+    "dry_mass"          : [26760, 950, 131],
     "wet_mass"          : [226400, 6954, 2141],
     "isp"               : [370, 319, 292],
     "main_stage_thrust" : 3033.3
@@ -187,6 +187,27 @@
       "dry_mass"          : [26760, 3490],
       "wet_mass"          : [226400, 30710],
       "isp"               : [380, 462],
+      "main_stage_thrust" : 2235.92,
+      "boosters"            :{
+        "thrust"      : 3033.39,
+        "dry_mass"    : 26760,
+        "wet_mass"    : 226400,
+        "isp"         : 380,
+        "count"       : 2,
+        "burn_time"   : 246
+    }
+  },
+
+  
+      "delta-4h-star48": {
+      "type"              : "Historical",
+      "family"            : "Delta IV (ULA)",
+      "variant"           : "Heavy + Star 48BL (Parker config)",
+      "man_stage_add"     : 0,
+      "stages"            : 2,
+      "dry_mass"          : [26760, 3490, 131],
+      "wet_mass"          : [226400, 30710, 2141],
+      "isp"               : [380, 462, 292],
       "main_stage_thrust" : 2235.92,
       "boosters"            :{
         "thrust"      : 3033.39,
