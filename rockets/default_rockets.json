@@ -102,6 +102,18 @@
     "main_stage_thrust" : 3033.3
   },
 
+    "delta-4s-star48b": {
+    "type"              : "Hypothetical",
+    "family"            : "Delta IV (ULA)",
+    "variant"           : "Medium (single stick) + Delta K + Star 48B",
+    "man_stage_add"     : 0,
+    "stages"            : 3,
+    "dry_mass"          : [26760, 950, 126],
+    "wet_mass"          : [226400, 6954, 2141],
+    "isp"               : [370, 319, 292],
+    "main_stage_thrust" : 3033.3
+  },
+
 
     "delta-4m-42": {
       "type"              : "Historical",
