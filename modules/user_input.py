@@ -3,8 +3,8 @@ import os
 from dataclasses import dataclass
 from typing import List
 
-from config import CUSTOM_ROCKETS_PATH, DEFAULT_ROCKETS_PATH, DEBUG_MODE
-from scripts.ansi import *
+from config.config import CUSTOM_ROCKETS_PATH, DEFAULT_ROCKETS_PATH, DEBUG_MODE
+from modules.ansi import *
 
 
 @dataclass
@@ -61,55 +61,97 @@ def group_rockets(rockets):
     return grouped
 
 
-def choose_from_menu(title, options, label_func=str, skip_single=True):
-    if skip_single and len(options) == 1: #if desired, we can skip over 
-        return options[0]                 #single entries
+def choose_from_menu(title, options, label_func=str, skip_single=True, allow_back=True, page_size=7):
+    if skip_single and len(options) == 1:
+        return options[0]
 
-    print(YELLOW(f"\n{title}:"))
+    page = 0
 
-    for i, option in enumerate(options):
-        print(f"{GRAY(f'{i:3}')} : {GRAY(label_func(option))}")
+    while True:
+        total_pages = max(1, (len(options) + page_size - 1) // page_size)
+        page = max(0, min(page, total_pages - 1))
 
-    selected = input(f"\n{GREEN('Select number: ')}").strip()
+        start = page * page_size
+        end = start + page_size
+        page_options = options[start:end]
 
-    if not selected.isdigit():
-        return None
+        os.system("cls" if os.name == "nt" else "clear")
 
-    index = int(selected)
+        print(YELLOW(f"\n{title}"))
+        print(GRAY(f"Page {page + 1}/{total_pages}\n"))
 
-    if not 0 <= index < len(options):
-        return None
+        if allow_back:
+            print(f"{GRAY('0')} : {D_GRAY('Back')}")
 
-    return options[index]
+        for i, option in enumerate(page_options, start=1):
+            print(f"{GRAY(str(i))} : {GRAY(label_func(option))}")
+
+        if total_pages > 1:
+            print()
+            print(f"{GRAY('8')} : {D_GRAY('Previous page')}")
+            print(f"{GRAY('9')} : {D_GRAY('Next page')}")
+
+        selected = input(f"\n{GREEN('Select option: ')}").strip()
+
+        if selected == "0" and allow_back:
+            return "BACK"
+
+        if selected == "8" and total_pages > 1:
+            page -= 1
+            continue
+
+        if selected == "9" and total_pages > 1:
+            page += 1
+            continue
+
+        if not selected.isdigit():
+            continue
+
+        index = int(selected) - 1
+
+        if 0 <= index < len(page_options):
+            return page_options[index]
 
 def select_rocket_key(rockets):
     grouped = group_rockets(rockets)
 
-    rocket_type = choose_from_menu(
-        "Rocket Types",
-        sorted(grouped.keys()),
-        skip_single=False,  # always show top level (type, in this case)
-    )
+    while True:
+        rocket_type = choose_from_menu(
+            "Rocket Types",
+            sorted(grouped.keys()),
+            skip_single=False,
+            allow_back=False,
+        )
 
-    family = choose_from_menu(
-        f"{rocket_type} Families",
-        sorted(grouped[rocket_type].keys()),
-        skip_single=False, #I don't think skipping this is great either
-    )
+        if rocket_type is None:
+            return None
 
-    variant = choose_from_menu(
-        f"{family} Variants",
-        grouped[rocket_type][family],
-        label_func=lambda item: item[0],
-    )
+        while True:
+            family = choose_from_menu(
+                f"{rocket_type} Families",
+                sorted(grouped[rocket_type].keys()),
+                skip_single=False
+            )
 
-    _, key, _ = variant
-    return key
+            if family == "BACK":
+                break
 
+            while True:
+                variant = choose_from_menu(
+                    f"{family} Variants",
+                    grouped[rocket_type][family],
+                    label_func=lambda item: item[0],
+                )
+
+                if variant == "BACK":
+                    break
+
+                _, key, _ = variant
+                return key
     
 def rocket_display_name(key, rocket_data):
     if "family" in rocket_data and "variant" in rocket_data:
-        return f"{rocket_data['family']} - {rocket_data['variant']}"
+        return f"{rocket_data['family']} {rocket_data['variant']}"
 
     return rocket_data.get("desc", key)
 

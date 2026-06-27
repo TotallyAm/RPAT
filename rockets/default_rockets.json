@@ -21,20 +21,17 @@
     "wet_mass"     : [409000, 111500],
     "isp"          : [311, 348],
     "type"         : "Active",
-    "desc"         : "Falcon 9 Block 5 (Fully Expended) (SpaceX)",
     "fuel_reserve" : [0, 0]
   },
   
     "f9shitfuck": {
-    "family"       : "Falcon 9 (SpaceX)",
-    "variant"      : "Expended + 2x RSRMVs",  
+    "family"       : "Falcon 9 (SpaceX) Expended + 2x RSRMVs",
     "man_stage_add": 0,
     "stages"       : 2,
     "dry_mass"     : [22000, 4000],
     "wet_mass"     : [409000, 111500],
     "isp"          : [311, 348],
     "type"         : "Hypothetical",
-    "desc"         : "Falcon 9 Block 5 (Fully Expended) + 2x RSRMVs (SpaceX)",
     "fuel_reserve" : [0, 0],
     "main_stage_thrust" : 7605,
       "boosters"            :{
@@ -48,15 +45,13 @@
   },
 
     "SpaceShuttle": {
-    "family"       : "Space Shuttle (NASA, Various)",
-    "variant"      : "Main",  
+    "family"       : "Space Shuttle (NASA, Various)", 
     "man_stage_add": 0,
     "stages"       : 2,
     "dry_mass"     : [29930, 99318],
     "wet_mass"     : [750975, 110000],
     "isp"          : [455, 319],
     "type"         : "Historical",
-    "desc"         : "Space Shuttle (NASA)",
     "fuel_reserve" : [0, 1603],
     "main_stage_thrust" : 6837,
       "boosters"            :{

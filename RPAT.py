@@ -4,24 +4,24 @@
 ##############################################
 
 
-## version 0.90 - MECO
+## version 1.0 - Eye Candy!
 
 
 import json
 import os
 import time
 
-from scripts.ansi import *
-from config import DEBUG_MODE, GRAPH, TRAJECTORY_TARGETS_PATH
+from modules.ansi import *
+from config.config import DEBUG_MODE, GRAPH_MODE, TRAJECTORY_TARGETS_PATH
 
 print(D_GRAY("----------------------------------------"))
 print(GRAY("Rocket Performance Analysis Tool (RPAT)"))
 print(GRAY("         Created by TotallyAm"))
 print(D_GRAY("----------------------------------------"))
 
-from scripts.graphing import graph
-from scripts.payload import trajectories
-from scripts.user_input import rocket
+from modules.graphing import graph
+from modules.payload import trajectories
+from modules.user_input import rocket
 
 def load_targets():
     path = os.path.join(os.path.dirname(__file__), TRAJECTORY_TARGETS_PATH)
@@ -43,10 +43,10 @@ start_time = time.perf_counter()
 
 leo_payload = trajectories(rocket, trajectory_targets)
 
-if DEBUG_MODE and not GRAPH:
+if DEBUG_MODE and GRAPH_MODE == "off":
     delta_time = time.perf_counter() - start_time
     print(f"\nThis program took {(delta_time * 1000):.0f} ms to complete.")
-elif GRAPH:
+elif GRAPH_MODE == "window" or "terminal":
     graph(rocket, leo_payload)
 
 time.sleep(10)

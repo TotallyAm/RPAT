@@ -1,20 +1,11 @@
 from collections import namedtuple
 
 import numpy as np
+from config.config import DEBUG_MODE, coarse_factor, fine_factor
+from modules.ansi import *
+from modules.user_input import rocket
 
-import config
-from scripts.ansi import *
-from scripts.user_input import rocket
 
-
-DEBUG_MODE = config.DEBUG_MODE
-coarse_factor = getattr(config, "coarse_factor", None)
-if coarse_factor is None:
-    coarse_factor = config.coarseFactor
-
-fine_factor = getattr(config, "fine_factor", None)
-if fine_factor is None:
-    fine_factor = config.fineFactor
 
 
 def rocket_equation(wet_mass, dry_mass, isp):
