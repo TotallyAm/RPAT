@@ -311,6 +311,18 @@
       "count"       : 4,
       "burn_time"   : 94
     }     
+  },
+  
+  "M-V": {
+    "type"                : "Historical",
+    "family"              : "M-series (JAXA)",
+    "variant"             : "M-V rocket (JAXA)",
+    "man_stage_add"       : 0,
+    "stages"              : 4,
+    "wet_mass"            : [83000, 37000, 12000, 2700],
+    "dry_mass"            : [11000, 4000, 1000, 200],
+    "isp"                 : [274, 292, 301, 301.7],
+    "main_stage_thrust"   : 3760
   }
 
 }
