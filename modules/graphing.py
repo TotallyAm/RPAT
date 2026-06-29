@@ -12,7 +12,10 @@ def graph(rocket, leo_payload):
 
     rocket_name = rocket.rocket_name
 
-    cutoff = 9200  # m/s. Final graph cutoff; leave this alone as it impacts the integral.
+    if leo_payload == 0:
+        cutoff = 50
+    else: 
+        cutoff = 9200  # m/s. Final graph cutoff; leave this alone as it impacts the integral.
     step = (rocket.rocket_mass / 1000) * graph_factor  # kg
     if GRAPH_MODE == "terminal":
         step = step * 5
@@ -45,11 +48,14 @@ def graph(rocket, leo_payload):
         delta_payload = payloads[i] - payloads[i - 1]
         slope = (delta_v / delta_payload) if delta_payload != 0 else 0
         dv_derivative.append(slope)
-
-    initial_slope = dv_derivative[0]  # m/s/kg
+    try:
+        initial_slope = dv_derivative[0]  # m/s/kg
+    except:
+        initial_slope = 0
+    
     normalised_eq = -initial_slope / dvs[0]
 
-    if leo_payload >= 0:
+    if leo_payload >= 0 and initial_slope > 0:
         payload_fraction = leo_payload / rocket.rocket_mass
         leq = -np.log10(normalised_eq / (rocket.rocket_mass * (payload_fraction ** 3)))
     else:
@@ -90,7 +96,7 @@ def graph(rocket, leo_payload):
 
         ax.plot(payloads, dvs, "-", lw=2, label="Achieved Δv")
 
-        if plot_raw_curve:
+        if plot_raw_curve and GRAPH_MODE == "window":
             ax.plot(raw_payloads, raw_dvs, "--", lw=2, label="Achieved Δv without fuel reserves.")
             min_len = min(len(payloads), len(raw_dvs))
             ax.fill_between(
