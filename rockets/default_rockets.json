@@ -261,7 +261,7 @@
 
 
   "atlas-v-stick": {
-    "type"                : "Active",
+    "type"                : "Historical",
     "family"              : "Atlas V (ULA)",
     "variant"             : "401 (no SRBs)",
     "man_stage_add"       : 0,
@@ -274,7 +274,7 @@
 
 
   "atlas-v-2x-aj60a": {
-    "type"                : "Active",
+    "type"                : "Historical",
     "family"              : "Atlas V (ULA)",
     "variant"             : "421 (2x AJ-60A)",
     "man_stage_add"       : 0,
@@ -293,9 +293,28 @@
     }     
   },
 
+  "atlas-v-N22": {
+    "type"                : "Active",
+    "family"              : "Atlas V (ULA)",
+    "variant"             : "N22 (2x AJ-60A)",
+    "man_stage_add"       : 0,
+    "stages"              : 2,
+    "dry_mass"             : [21054, 2617],
+    "wet_mass"             : [305143, 23447],
+    "isp"                 : [320, 450.5],
+    "main_stage_thrust"   : 3827,
+    "boosters"            :{
+      "thrust"      : 1688.4,
+      "dry_mass"    : 4067,
+      "wet_mass"    : 46697,
+      "isp"         : 279.3,
+      "count"       : 2,
+      "burn_time"   : 94
+    }     
+  },
 
   "atlas-v-4x-aj60a": {
-    "type"                : "Active",
+    "type"                : "Historical",
     "family"              : "Atlas V (ULA)",
     "variant"             : "541 (4x AJ-60A)",
     "man_stage_add"       : 0,
