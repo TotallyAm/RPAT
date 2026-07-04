@@ -1,4 +1,4 @@
-# RPAT – Rocket Performance Analysis Tool
+# RPAT - Rocket Performance Analysis Tool
 
 RPAT is a terminal-based tool for analysing the performance of launch vehicles. It's designed for players of KSP (particularly RP-1), amateur aerospace designers, and anyone who wants a quick, clear look at how well a given rocket performs.
 
@@ -8,25 +8,14 @@ This tool isn't meant to replace detailed simulation or flight testing. Instead,
 
 ## Purpose and Design Philosophy
 
-RPAT was created to answer a simple question:
-
-> "Is this rocket good at what I built it for?"
-
-The goals were:
-
-* Give clear visual and numerical feedback on a rocket's performance
-* Let users compare designs quickly without extra setup
-* Remain simple to use, even in a terminal window
-* Make the code easy to read, expand, and learn from
-
-It focuses on energy efficiency, payload margins, and practical delta-v capability. It also categorises rockets by role (LEO, deep-space, or general-purpose) based on their energy behaviour.
+RPAT was created to give you information about a rocket, or feedback on your own rocket, without needing to do the tedious calculations for it yourself, then to present them in a clear understandable format.
 
 ---
 
 ## Features
 
-* **Delta-v vs Payload Graphing** - See how added payload affects performance
-* **Built-in Rocket Presets** - Select from a growing library of real and fictional rockets
+* **Delta-v vs Payload Graph** - See how added payload affects performance, and see how your rocket behaves at various dVs.
+* **Built-in Rocket Presets** - Select from a growing library of default rockets.
 * **Efficiency Scores** - Get metrics on how efficient your rocket it at a given role, for comparative use.
 * **Payload Finder** - Reports how much payload can be sent to LEO, GTO, or other delta V targets.
 * **Custom Vehicle Input** - Simple json system supported for adding your own designs
@@ -35,10 +24,14 @@ It focuses on energy efficiency, payload margins, and practical delta-v capabili
 
 ## Installation and Requirements
 
-RPAT requires Python 3 and the following libraries:
+RPAT requires Python 3 and numpy, it will not work without it. 
+
+RPAT has the ability to generate graphs in two different modes, you can choose between them or disable them in config/config.py, the graphing modes both require matplotlib, but the "terminal" mode also requires plotext.
+
+To quickly install all modules with pip, use:
 
 ```bash
-pip install numpy matplotlib
+pip install numpy matplotlib plotext
 ```
 
 To run it, simply execute the main file:
