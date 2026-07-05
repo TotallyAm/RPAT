@@ -4,7 +4,7 @@
 ##############################################
 
 
-## version 1.0 - Eye Candy!
+## version 1.0 - Terminal Control
 
 
 import json

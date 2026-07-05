@@ -142,27 +142,7 @@ lands like in our example above. This does not need to be declared if you don't 
 
 Use `Rockets.txt` to document your values, assumptions, and sources for transparency.
 
----
-
-## Sample Vehicle Data Table
-
-| Rocket Name                 | Payload to LEO (kg) | LEQ   | HEQ   |
-| --------------------------- | ------------------- | ----- | ----- |
-| Falcon 9 Block 5 (expended) | 22,773              | 5.918 | 5.198 |
-| Delta IV Medium             | 11,329              | 5.392 | 5.352 |
-| Saturn V                    | 147,160             | 7.450 | 6.434 |
-| N1 (1969)                   | 101,597             | 6.483 | 4.576 |
-
- This is an example of the output from some of the preset rockets, to be used as a comparison.
 
 ---
 
-## Coming Soon / Ideas
-
-* Suborbital calculator (range, apogee, launch angle estimation) (potentially, not confirmed)
-* Expanded preset library with more real and RP-1 craft (in progress)
-* Automatic performance summaries based on metrics
-
----
-
-RPAT is under active development, things may change around with updates, but each stable release is checked for mathematical accuracy.
+RPAT is under active development, things may change around with updates, but each stable release is tested significantly, and each experimental build is usually checked for mathematically accuracy, if a little buggy overall.

@@ -5,6 +5,7 @@ from typing import List
 
 from config.config import CUSTOM_ROCKETS_PATH, DEFAULT_ROCKETS_PATH, DEBUG_MODE
 from modules.ansi import *
+from modules.ansi import USE_ANSI
 
 
 @dataclass
@@ -65,6 +66,15 @@ def choose_from_menu(title, options, label_func=str, skip_single=True, allow_bac
     if skip_single and len(options) == 1:
         return options[0]
 
+
+    def clear_previous_lines(line_count):
+        if USE_ANSI:
+            for _ in range(line_count):
+                print("\033[1A\033[2K", end="")
+                print("\r", end="")
+        else:
+            os.system("cls" if os.name == "nt" else "clear")
+    
     page = 0
 
     while True:
@@ -75,25 +85,34 @@ def choose_from_menu(title, options, label_func=str, skip_single=True, allow_bac
         end = start + page_size
         page_options = options[start:end]
 
-        os.system("cls" if os.name == "nt" else "clear")
+        
+        current_lines_printed = 0
 
         print(YELLOW(f"\n{title}"))
         print(GRAY(f"Page {page + 1}/{total_pages}\n"))
+        current_lines_printed += 4
 
         if allow_back:
             print(f"{GRAY('0')} : {D_GRAY('Back')}")
+            current_lines_printed += 1
 
         for i, option in enumerate(page_options, start=1):
             print(f"{GRAY(str(i))} : {GRAY(label_func(option))}")
+            current_lines_printed += 1
 
         if total_pages > 1:
             print()
             print(f"{GRAY('8')} : {D_GRAY('Previous page')}")
             print(f"{GRAY('9')} : {D_GRAY('Next page')}")
+            lines_printed += 3
 
         selected = input(f"\n{GREEN('Select option: ')}").strip()
+        current_lines_printed += 2
+
+
 
         if selected == "0" and allow_back:
+            clear_previous_lines(current_lines_printed)
             return "BACK"
 
         if selected == "8" and total_pages > 1:
@@ -105,11 +124,13 @@ def choose_from_menu(title, options, label_func=str, skip_single=True, allow_bac
             continue
 
         if not selected.isdigit():
+            clear_previous_lines(current_lines_printed)
             continue
 
         index = int(selected) - 1
 
         if 0 <= index < len(page_options):
+            clear_previous_lines(current_lines_printed)
             return page_options[index]
 
 def select_rocket_key(rockets):
